@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "node app.js",
-    "build": ""
+    "build": "node suma"
   },
   "engines": {
     "node": "9.8.0"
