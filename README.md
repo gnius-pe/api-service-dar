@@ -2,7 +2,7 @@
 
 ¡Gracias por tu interés en contribuir a Service-DAR! Valoramos y apreciamos la contribución de la comunidad. Antes de comenzar, por favor toma un momento para revisar las siguientes pautas y recomendaciones.
 
-[![flujo-de-trabajo-P-gina-2.jpg](https://i.postimg.cc/ZnkqTCnz/flujo-de-trabajo-P-gina-2.jpg)](https://postimg.cc/TL9x02nt)
+[![flujo-de-trabajo-P-gina-2.png](https://i.postimg.cc/SK2BrVQk/flujo-de-trabajo-P-gina-2.png)](https://postimg.cc/FfvCFyJB)
 
 ## Cómo Contribuir
 
