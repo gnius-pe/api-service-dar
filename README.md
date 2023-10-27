@@ -2,6 +2,8 @@
 
 ¡Gracias por tu interés en contribuir a Service-DAR! Valoramos y apreciamos la contribución de la comunidad. Antes de comenzar, por favor toma un momento para revisar las siguientes pautas y recomendaciones.
 
+[![flujo-de-trabajo-P-gina-2.jpg](https://i.postimg.cc/ZnkqTCnz/flujo-de-trabajo-P-gina-2.jpg)](https://postimg.cc/TL9x02nt)
+
 ## Cómo Contribuir
 
 1. **Forkea el Repositorio:** Haz clic en el botón "Fork" en la parte superior de esta página para crear una copia de este repositorio en tu cuenta de GitHub.
