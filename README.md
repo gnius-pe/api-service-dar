@@ -8,6 +8,5 @@
 
 2. **Clona tu Repositorio Forkeado:** Clona el repositorio que forkeaste a tu máquina local.
 
-   ```bash
-   git clone https://github.com/gnius-pe/api-service-dar.git
+
 
