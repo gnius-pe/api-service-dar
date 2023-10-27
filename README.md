@@ -9,34 +9,12 @@
 1. **Forkea el Repositorio:** Haz clic en el botón "Fork" en la parte superior de esta página para crear una copia de este repositorio en tu cuenta de GitHub.
 
 2. **Clona tu Repositorio Forkeado:** Clona el repositorio que forkeaste a tu máquina local.
-
-## Instalación de Node.js
-
-Para ejecutar este proyecto, primero debes instalar Node.js en tu máquina. Sigue estos pasos:
-
-### Paso 1: Descargar Node.js
-
-Descarga Node.js desde el sitio oficial: [Node.js Downloads](https://nodejs.org/en/download/).
-
-### Paso 2: Instalar Node.js
-
-- **En Windows:** Ejecuta el instalador descargado y sigue las instrucciones del asistente de instalación.
-
-- **En macOS:** Descarga el paquete y ejecútalo. Luego, sigue las instrucciones de instalación.
-
-- **En Linux (Ubuntu):** Utiliza el siguiente comando en tu terminal:
-
-   ```bash
-   sudo apt update
-   sudo apt install nodejs
-   sudo apt install npm
-   ```
-
-### Paso 3: Verificar la Instalación
-
-Para verificar que Node.js y npm se instalaron correctamente, ejecuta los siguientes comandos en tu terminal:
-
-   ```bash
-   node -v
-   npm -v
-   ```
+3. **Instalar Dependencias:** Instala las dependencias del proyecto definidas en el archivo package.json.
+     ```bash
+     npm install
+     ```
+4. **Ejecutar la Aplicación:** Una vez que se hayan instalado las dependencias, ejecuta la aplicación utilizando el comando definido en el archivo package.json.
+      ```bash
+      npm run dev
+      ```
+Esto ejecutará la aplicación Node.js. Abre tu navegador web y navega a la dirección en la que se ejecuta la aplicación (http://localhost:3000). 
