@@ -10,5 +10,24 @@
 
 2. **Clona tu Repositorio Forkeado:** Clona el repositorio que forkeaste a tu máquina local.
 
+## Instalación de Node.js
 
+Para ejecutar este proyecto, primero debes instalar Node.js en tu máquina. Sigue estos pasos:
+
+### Paso 1: Descargar Node.js
+
+Descarga Node.js desde el sitio oficial: [Node.js Downloads](https://nodejs.org/en/download/).
+
+### Paso 2: Instalar Node.js
+
+- **En Windows:** Ejecuta el instalador descargado y sigue las instrucciones del asistente de instalación.
+
+- **En macOS:** Descarga el paquete y ejecútalo. Luego, sigue las instrucciones de instalación.
+
+- **En Linux (Ubuntu):** Utiliza el siguiente comando en tu terminal:
+
+   ```bash
+   sudo apt update
+   sudo apt install nodejs
+   sudo apt install npm
 
