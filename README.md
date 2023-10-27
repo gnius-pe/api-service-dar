@@ -30,4 +30,13 @@ Descarga Node.js desde el sitio oficial: [Node.js Downloads](https://nodejs.org/
    sudo apt update
    sudo apt install nodejs
    sudo apt install npm
+   ```
 
+### Paso 3: Verificar la Instalación
+
+Para verificar que Node.js y npm se instalaron correctamente, ejecuta los siguientes comandos en tu terminal:
+
+   ```bash
+   node -v
+   npm -v
+   ```
