@@ -1,0 +1,12 @@
+runtime: nodejs18
+env: flex
+
+handlers:
+- url: /static
+  static_dir: static
+
+- url: /api/.*
+  script: api.js
+
+- url: /.*
+  script: main.js
