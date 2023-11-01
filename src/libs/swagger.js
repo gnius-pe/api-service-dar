@@ -6,7 +6,7 @@ const options = {
         openapi:"3.0.0",
         info : { title: 'API DAR', version:"1.0.0"}
     },
-    apis: ['src/routes/auth.routes.js','../models/user.model.js'],
+    apis: ['src/routes/*.js','../models/user.model.js'],
 };
 
 const swaggerSpec = swagggerJSDoc(options);
