@@ -59,7 +59,7 @@ const locationSchema = new mongoose.Schema({
     reference:{
         type: String,
         trim: true,
-    },
+    }
 });
 
 
