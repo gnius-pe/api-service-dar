@@ -82,7 +82,7 @@ const router = Router();
  *          200:
  *              description: listado de pacientes
  */
-router.get('/patients',authRequired,getPatients);
+router.get('/patients',getPatients);
 
 /**
  * @swagger
@@ -102,7 +102,7 @@ router.get('/patients',authRequired,getPatients);
  *          200:
  *              description: un paciente
  */
-router.get('/patient/:id',authRequired,getPatient);
+router.get('/patient/:id',getPatient);
 
 /**
  * @swagger
@@ -122,7 +122,7 @@ router.get('/patient/:id',authRequired,getPatient);
  *          200:
  *              description: nuevo paciente
  */
-router.post('/patient',authRequired,createPatient);
+router.post('/patient',createPatient);
 
 /**
  * @swagger
@@ -142,7 +142,7 @@ router.post('/patient',authRequired,createPatient);
  *          204:
  *              description: paceinte eliminado
  */
-router.delete('/patient/:id',authRequired,deletePatient);
+router.delete('/patient/:id',deletePatient);
 
 /**
  * @swagger
@@ -169,6 +169,6 @@ router.delete('/patient/:id',authRequired,deletePatient);
  *          200:
  *              description: paceinte actualizado
  */
-router.put('/patient/:id',authRequired,updatePatient);
+router.put('/patient/:id',updatePatient);
 //router.put('/patient/:id',authRequired,updatePatient);
 export default router;
