@@ -25,7 +25,7 @@ const router = Router();
  *              -password
  *              -username
  *          example:
- *              email: igor.ramos@der.com
+ *              email: igor.ramos@dar.com
  *              password: capibara123
  *              username: capigor
  */
@@ -47,7 +47,7 @@ const router = Router();
  *              -email
  *              -password
  *          example:
- *              email: igor.ramos@der.com
+ *              email: igor.ramos@dar.com
  *              password: capibara123
  */
 
