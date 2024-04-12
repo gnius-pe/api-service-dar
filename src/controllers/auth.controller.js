@@ -3,13 +3,15 @@ import bvrypt from "bcryptjs";
 import {createAccessToken} from "../libs/jwt.js"
 
 export const register = async (req, res) =>{
-    const {email, password, username} = req.body 
+    const {email, password, username, role, specialty} = req.body 
     try{
         const passwordHash = await bvrypt.hash(password,10)
         const newUser = new User({
             username,
             email,
-            password: passwordHash
+            password: passwordHash,
+            role,
+            specialty
         })
         const userSaved = await newUser.save();
         const token = await createAccessToken({id:userSaved._id});
@@ -18,8 +20,11 @@ export const register = async (req, res) =>{
             id:userSaved._id,
             username : userSaved.username,
             email: userSaved.email,
+            role: userSaved.role,
+            specialty: userSaved.specialty,
             createdAt: userSaved.createdAt,
             updatedAt: userSaved.updatedAt,
+            
         })
     }catch(error){
         res.status(500).json({message: error.message})
@@ -43,6 +48,8 @@ export const login = async (req, res) =>{
             id:userFound._id,
             username : userFound.username,
             email: userFound.email,
+            role: userFound.role,
+            specialty: userFound.specialty,
             createdAt: userFound.createdAt,
             updatedAt: userFound.updatedAt,
         })
