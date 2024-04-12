@@ -20,14 +20,23 @@ const router = Router();
  *              username:
  *                  type: string
  *                  description: un nombre o apodo para el usuario
+ *              role:
+ *                  type: string
+ *                  description: tipo de rol que ejerce dentro del sistema
+ *              specialty:
+ *                  type: string
+ *                  description: solo para los medicos
  *          required:
  *              -email
  *              -password
  *              -username
+ *              -role
  *          example:
- *              email: igor.ramos@dar.com
- *              password: capibara123
- *              username: capigor
+ *              email: ana.rodriguez@dar.com
+ *              password: ana456
+ *              username: ana_r
+ *              role: medico
+ *              specialty: Ginecología
  */
 
 /**
@@ -47,8 +56,8 @@ const router = Router();
  *              -email
  *              -password
  *          example:
- *              email: igor.ramos@dar.com
- *              password: capibara123
+ *              email: ana.rodriguez@dar.com
+ *              password: ana456
  */
 
 /**
@@ -67,7 +76,7 @@ const router = Router();
  *                      $ref: '#/components/schemas/Registro'
  *      responses:
  *          200:
- *              description: newvo usuario regitrado
+ *              description: nuevo usuario regitrado
  */
 router.post('/register', register);
 
