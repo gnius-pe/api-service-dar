@@ -8,7 +8,7 @@ import cors from "cors";
 
 const app = express();
 app.use(cors({
-    origin:'http://localhost:5173',
+    origin:['http://localhost:5173','https://gestion-dar-h74f4.ondigitalocean.app'],
     credentials:true
 }));
 app.use(morgan('dev'));
