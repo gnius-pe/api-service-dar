@@ -1,12 +1,11 @@
 TN:
 SF:src\controllers\suma.js
-FN:1,(anonymous_0)
+FN:1,suma
 FNF:1
-FNH:0
-FNDA:0,(anonymous_0)
-DA:1,1
-DA:2,0
-LF:2
+FNH:1
+FNDA:1,suma
+DA:2,1
+LF:1
 LH:1
 BRF:0
 BRH:0
