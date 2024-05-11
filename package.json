@@ -21,7 +21,8 @@
     "mongoose": "^7.6.3",
     "morgan": "^1.10.0",
     "swagger-jsdoc": "^6.2.8",
-    "swagger-ui-express": "^5.0.0"
+    "swagger-ui-express": "^5.0.0",
+    "twilio": "^5.0.4"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
