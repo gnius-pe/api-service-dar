@@ -16,7 +16,7 @@ const router = Router();
  *          required:
  *              -number
  *          example:
- *              number: "+51929417416"
+ *              number: "929417416"
  */
 
 /**
@@ -36,7 +36,7 @@ const router = Router();
  *              -number
  *              -code
  *          example:
- *              number: "+51929417416"
+ *              number: "929417416"
  *              code: "325632"
  */
 
@@ -65,7 +65,7 @@ router.post('/verify',verifyPhoneNumber);
  * @swagger
  * /api/v1/check:
  *  post:
- *      summary: Valida el codigo recivido
+ *      summary: Valida el codigo obtenido
  *      tags:
  *       - Verificacion
  *      requestBody:

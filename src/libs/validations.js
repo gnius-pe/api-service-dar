@@ -6,3 +6,8 @@ export const isObjectEmpty = (obj)  =>{
     }
     return true; // Si no se encontraron propiedades, el objeto está vacío
 };
+
+export const validateLongNumber = (number,leng) => {
+  const regex = /^[0-9]{leng}$/;
+  return regex.test(number);
+}
