@@ -60,24 +60,7 @@ const router = Router();
  *              password: ana456
  */
 
-/**
- * @swagger
- * /api/register:
- *  post:
- *      summary: crea un nuevo usuario
- *      tags:
- *       - Sesion
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      type: object
- *                      $ref: '#/components/schemas/Registro'
- *      responses:
- *          200:
- *              description: nuevo usuario regitrado
- */
+
 router.post('/register', register);
 
 /**
