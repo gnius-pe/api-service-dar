@@ -8,8 +8,13 @@ import misionRouter from "./routes/mision.routes.js";
 import userRouter from "./routes/userManagement.routes.js";
 import {swagggerJSDocs} from "../src/libs/swagger.js";
 import cors from "cors";
+import figlet from "figlet";
 
 const app = express();
+
+figlet('    Genius Code',(err,result)=>{
+    console.log(err || result);
+});
 
 app.use(cors({
     origin:['http://localhost:5173','https://gestion-dar-h74f4.ondigitalocean.app'],
