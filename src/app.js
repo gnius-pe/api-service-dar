@@ -12,14 +12,11 @@ import figlet from "figlet";
 
 const app = express();
 
-figlet('    Genius Code',(err,result)=>{
-    console.log(err || result);
-});
-
 app.use(cors({
     origin:['http://localhost:5173','https://gestion-dar-h74f4.ondigitalocean.app'],
     credentials:true
 }));
+
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(cookieParser());
@@ -29,5 +26,8 @@ app.use('/api/v1',verifiNumberRouter);
 app.use('/api',misionRouter);
 app.use('/api',userRouter);
 swagggerJSDocs(app,3000);
+figlet('    Genius Code',(err,result)=>{
+    console.log(err || result);
+});
 
 export default app;
