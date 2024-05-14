@@ -26,7 +26,7 @@ app.use('/api/v1',verifiNumberRouter);
 app.use('/api',misionRouter);
 app.use('/api',userRouter);
 swagggerJSDocs(app,3000);
-figlet('    Genius Code',(err,result)=>{
+figlet('    Gnius Code',(err,result)=>{
     console.log(err || result);
 });
 
