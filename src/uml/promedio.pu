@@ -1,0 +1,22 @@
+@startuml
+digraph foo {
+  node [style=rounded]
+  I[fillcolor=yellow]
+  F[fillcolor=yellow]
+  
+I -> p2
+p2 -> p3
+p3->p4
+p4 -> p5
+p4->p8
+p8 ->p11
+p11 -> p12
+p12 -> p11
+p11 -> p14
+p8 -> p9
+p14 -> F
+p9 -> F
+p5->F
+
+}
+@enduml
