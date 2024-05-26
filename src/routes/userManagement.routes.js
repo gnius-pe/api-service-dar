@@ -5,6 +5,67 @@ const router = Router();
 
 /**
  * @swagger
+ * components:
+ *  schemas:
+ *      Usuario:
+ *          type: object
+ *          properties:
+ *              numberIdentification:
+ *                  type: string
+ *                  description :  DNI del usuario
+ *              name:
+ *                  type: string
+ *                  description: nombre del usuario
+ *              lastName:
+ *                  type: string
+ *                  description: apellidos del usuario
+ *              birthDate: 
+ *                  type: Date
+ *                  description: fecha de nacimineto del usuario
+ *              firtsNumberPhone:
+ *                  type: string
+ *                  description: Prinrcipal numero de celular
+ *              secondNumberPhone:
+ *                  type: string
+ *                  description: numero secundario del usuario (opcional)
+ *              sexo:
+ *                  type: string
+ *                  description: Sexo del usuairo
+ *              email:
+ *                  type: string
+ *                  description: correo del usuario nuevo
+ *              specialty:
+ *                  type: string
+ *                  description: solo para los medicos
+ *              role:
+ *                  type: string
+ *                  description: tipo de rol que ejerce dentro del sistema
+ *          required:
+ *              -numberIdentification
+ *              -name
+ *              -lastName
+ *              -birthDate
+ *              -firtsNumberPhone
+ *              -secondNumberPhone
+ *              -sexo
+ *              -email
+ *              -specialty
+ *              -role
+ *          example:
+ *              numberIdentification: "823456789"
+ *              name: Ana
+ *              lastName: Rodriguez
+ *              birthDate: "1985-05-15"
+ *              firtsNumberPhone: "987243567"
+ *              secondNumberPhone: "964234876"
+ *              sexo: Femenino
+ *              email: ana.rodriguez@dar.com
+ *              specialty: Ginecología
+ *              role: medico
+ */
+
+/**
+ * @swagger
  * /api/user:
  *  post:
  *      summary: crea un usuario
@@ -16,7 +77,7 @@ const router = Router();
  *              application/json:
  *                  schema:
  *                      type: object
- *                      $ref: '#/components/schemas/Registro'
+ *                      $ref: '#/components/schemas/Usuario'
  *      responses:
  *          200:
  *              description: nuevo Usuario
@@ -76,7 +137,7 @@ router.get('/user',getUserAll);
  *              application/json:
  *                  schema:
  *                      type: object
- *                      $ref: '#/components/schemas/Registro'
+ *                      $ref: '#/components/schemas/Usuario'
  *      responses:
  *          200:
  *              description: usuairo actualizado
