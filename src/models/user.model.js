@@ -1,6 +1,37 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
+    numberIdentification:{
+        type: String,
+        required: true
+    },
+    name :{
+        type : String,
+        required: true,
+        trim: true
+    },
+    lastName :{
+        type: String,
+        required: true,
+        trim: true
+    },
+    birthDate: {
+        type: Date,
+        required: true,
+    },
+    firtsNumberPhone: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    secondNumberPhone:{
+        type: String
+    },
+    sexo: {
+        type: String,
+        required: true,
+        trim: true
+    },
     username : {
         type: String,
         required: true,
@@ -17,7 +48,8 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     specialty:{
-        type: String
+        type: String,
+        required: true
     },
     role: {
         type: String,

@@ -2,21 +2,45 @@ import bvrypt from "bcryptjs";
 import UserModel from "../models/user.model.js"
 
 export const createUser = async (req,res) => {
-    const {email, password, username, role, specialty} = req.body;
+    const {
+        numberIdentification,
+        name,
+        lastName,
+        birthDate,
+        firtsNumberPhone, 
+        secondNumberPhone,
+        sexo, 
+        email,  
+        role, 
+        specialty
+    } = req.body;
     try {
-        const pasdwordHash = await bvrypt.hash(password,10);
+        const pasdwordHash = await bvrypt.hash(numberIdentification,10);
         const newUser = new UserModel({
-            username,
-            email,
-            password: passwordHash,
-            role,
+            numberIdentification,
+            name,
+            lastName,
+            birthDate,
+            firtsNumberPhone, 
+            secondNumberPhone,
+            sexo,
+            username : name + numberIdentification, 
+            email, 
+            password: pasdwordHash, 
+            role, 
             specialty
         });
         const userSaved = await newUser.save();
         if(!userSaved) return res.status(400).json({
             message: "user not save"
         });
-        res.json({userSaved});
+        res.json({
+            "_id" : userSaved.id,
+            "role" : userSaved.role,
+            "specialty" : userSaved.specialty,
+            "email" : userSaved.email,
+            "password" : numberIdentification
+        });
     } catch (error) {
         res.status(500).json({message: error.message});
     }
