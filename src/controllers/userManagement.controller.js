@@ -14,6 +14,8 @@ export const createUser = async (req,res) => {
         role, 
         specialty
     } = req.body;
+    const firtsName = name.split(/\s+/)[0].toLowerCase();
+    const fitsLastName = lastName.split(/\s+/)[0].toLowerCase();
     try {
         const pasdwordHash = await bvrypt.hash(numberIdentification,10);
         const newUser = new UserModel({
@@ -25,7 +27,8 @@ export const createUser = async (req,res) => {
             secondNumberPhone,
             sexo,
             username : name + numberIdentification, 
-            email, 
+            email,
+            organizationEmail : firtsName+"."+fitsLastName+"@DAR.or", 
             password: pasdwordHash, 
             role, 
             specialty
@@ -38,7 +41,7 @@ export const createUser = async (req,res) => {
             "_id" : userSaved.id,
             "role" : userSaved.role,
             "specialty" : userSaved.specialty,
-            "email" : userSaved.email,
+            "email" : userSaved.organizationEmail,
             "password" : numberIdentification
         });
     } catch (error) {

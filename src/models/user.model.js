@@ -43,6 +43,11 @@ const userSchema = new mongoose.Schema({
         trim: true,
         unique:true
     },
+    organizationEmail :{
+        type: String,
+        unique:true,
+        trim: true
+    },
     password: {
         type: String,
         required: true
