@@ -26,7 +26,6 @@ const personalInformationSchema = new mongoose.Schema({
     },
     secondNumberPhone:{
         type: String,
-        required: true,
         trim: true
     },sexo: {
         type: String,
