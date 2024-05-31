@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { authRequired } from "../middlewares/validateToken.js";
 import {getPatients,createPatient,getPatient,updatePatient,deletePatient} from "../controllers/patient.controller.js"
+import { validateschema } from "../middlewares/validator.middleware.js";
+import {patientSchema} from "../schemas/patient.schema.js";
 
 const router = Router();
 
@@ -122,7 +124,7 @@ router.get('/patient/:id',getPatient);
  *          200:
  *              description: nuevo paciente
  */
-router.post('/patient',createPatient);
+router.post('/patient',validateschema(patientSchema),createPatient);
 
 /**
  * @swagger

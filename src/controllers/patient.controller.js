@@ -1,6 +1,5 @@
 import { json } from "express";
 import TestPatient from "../models/patient.model.js";
-import {isObjectEmpty} from "../libs/validations.js";
 
 export const getPatients = async (req,res) => {
     const patients = await TestPatient.find();
@@ -8,20 +7,76 @@ export const getPatients = async (req,res) => {
 };
 
 export const createPatient = async (req,res) => { 
-    let patientReq = req.body;
-    if(isObjectEmpty(patientReq)) return res.status(400).json({
-        message: "Faltan datos"
-    }); 
-    try{
-        const newTestPatient = new TestPatient(patientReq);
-        const saveTestPatient = await newTestPatient.save();
-        res.json(saveTestPatient);
-    }catch(error){
+    const {
+        personalInformation: {
+            name,
+            lastName,
+            numberIdentification,
+            email,
+            firtsNumberPhone,
+            secondNumberPhone,
+            sexo,
+            birthDate
+        },
+        location: {
+            department,
+            province,
+            district,
+            reference
+        },
+        cita: {
+            appointmentDate,
+            specialty,
+            appointmentDetail
+        },
+        question: {
+            questionExamRecent,
+            spiritualSupport,
+            futureActivities
+        },
+        estate
+    } = req.body;
+
+    const personalInformation = {
+        "name" : name,
+        "lastName" :lastName,
+        "numberIdentification" :numberIdentification,
+        "email" : email,
+        "firtsNumberPhone" : firtsNumberPhone,
+        "secondNumberPhone" : secondNumberPhone || "",
+        "sexo" : sexo,
+        "birthDate" :birthDate
+    }
+
+    const location = {
+        "department" : department,
+        "province" : province,
+        "district" : district,
+        "reference" : reference
+    }
+
+    const cita = {
+        "appointmentDate" : appointmentDate,
+        "specialty" : specialty,
+        "appointmentDetail" : appointmentDetail
+    }
+
+    const question = {
+        "questionExamRecent" :questionExamRecent || false,
+        "spiritualSupport" : spiritualSupport || false,
+        "futureActivities" : futureActivities || false
+    }
+
+    try {
+        const newPatient = new TestPatient({personalInformation, location, cita, question, estate});
+        const savePatienr = await newPatient.save();
+        res.json(savePatienr);   
+    } catch (error) {
         console.error('Error al guardar :' + error);
         res.status(500).json({
             message:'Error al guardar :' + error
         });
-    } 
+    }
 };
 
 export const getPatient = async (req,res) => {

@@ -69,7 +69,7 @@ const citaSchema = new mongoose.Schema({
     specialty: {
         type: String
     },
-    appointmentdetail: {
+    appointmentDetail: {
         type: String
     }
 });
