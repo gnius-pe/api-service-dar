@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat.js";
 
 export const isObjectEmpty = (obj)  =>{
     for (const key in obj) {
@@ -26,10 +27,13 @@ export const validateLongNumber = (number,leng) => {
  * @param {string} date date of client standard
  * @param {string} hour is requered for future
  * @returns variable convert stantard
- */
+
+*/
+dayjs.extend(customParseFormat);
+
 export const parseStandardDate = (date,hour) => {  
   try {
-    if(date && hour){
+    if (date && hour) {
       const dateTime = `${date} ${hour}`;
       return dayjs(dateTime, 'DD-MM-YYYY HH:mm:ss').toISOString();
     }

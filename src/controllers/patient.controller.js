@@ -1,9 +1,17 @@
 import { json } from "express";
 import TestPatient from "../models/patient.model.js";
+import {parseStandardDate ,parseStandardClient} from "../libs/validations.js";
 
 export const getPatients = async (req,res) => {
     const patients = await TestPatient.find();
-    res.json(patients)
+    let reqPatients = patients.map(patient=>{
+        let patientObjet = patient.toObject();
+        patientObjet.personalInformation.birthDate = parseStandardClient(patientObjet.personalInformation.birthDate);
+        patientObjet.cita.appointmentDate = parseStandardClient(patientObjet.cita.appointmentDate);
+        return patientObjet;
+    })
+    
+    res.json(reqPatients)
 };
 
 export const createPatient = async (req,res) => { 
@@ -36,7 +44,7 @@ export const createPatient = async (req,res) => {
         },
         estate
     } = req.body;
-
+    const hour = "00:00:00";
     const personalInformation = {
         "name" : name,
         "lastName" :lastName,
@@ -45,8 +53,9 @@ export const createPatient = async (req,res) => {
         "firtsNumberPhone" : firtsNumberPhone,
         "secondNumberPhone" : secondNumberPhone || "",
         "sexo" : sexo,
-        "birthDate" :birthDate
+        "birthDate" : parseStandardDate(birthDate,hour)
     }
+    console.log(personalInformation)
 
     const location = {
         "department" : department,
@@ -56,7 +65,7 @@ export const createPatient = async (req,res) => {
     }
 
     const cita = {
-        "appointmentDate" : appointmentDate,
+        "appointmentDate" : parseStandardDate(appointmentDate,"00:00:00"),
         "specialty" : specialty,
         "appointmentDetail" : appointmentDetail
     }
@@ -70,7 +79,10 @@ export const createPatient = async (req,res) => {
     try {
         const newPatient = new TestPatient({personalInformation, location, cita, question, estate});
         const savePatienr = await newPatient.save();
-        res.json(savePatienr);   
+        let formatPatient = savePatienr.toObject();
+        formatPatient.personalInformation.birthDate = birthDate;
+        formatPatient.cita.appointmentDate = appointmentDate
+        res.json(formatPatient);   
     } catch (error) {
         console.error('Error al guardar :' + error);
         res.status(500).json({
@@ -96,7 +108,71 @@ export const deletePatient = async (req,res) => {
 };
 
 export const updatePatient = async (req,res) => {
-    const patient =  await TestPatient.findByIdAndUpdate(req.params.id, req.body, {
+    const {
+        personalInformation: {
+            name,
+            lastName,
+            numberIdentification,
+            email,
+            firtsNumberPhone,
+            secondNumberPhone,
+            sexo,
+            birthDate
+        },
+        location: {
+            department,
+            province,
+            district,
+            reference
+        },
+        cita: {
+            appointmentDate,
+            specialty,
+            appointmentDetail
+        },
+        question: {
+            questionExamRecent,
+            spiritualSupport,
+            futureActivities
+        },
+        estate
+    } = req.body;
+    const hour = "00:00:00";
+    const personalInformation = {
+        "name" : name,
+        "lastName" :lastName,
+        "numberIdentification" :numberIdentification,
+        "email" : email,
+        "firtsNumberPhone" : firtsNumberPhone,
+        "secondNumberPhone" : secondNumberPhone || "",
+        "sexo" : sexo,
+        "birthDate" : parseStandardDate(birthDate,hour)
+    }
+
+    const location = {
+        "department" : department,
+        "province" : province,
+        "district" : district,
+        "reference" : reference
+    }
+
+    const cita = {
+        "appointmentDate" : parseStandardDate(appointmentDate,hour),
+        "specialty" : specialty,
+        "appointmentDetail" : appointmentDetail
+    }
+
+    const question = {
+        "questionExamRecent" :questionExamRecent || false,
+        "spiritualSupport" : spiritualSupport || false,
+        "futureActivities" : futureActivities || false
+    }
+    const patient =  await TestPatient.findByIdAndUpdate(req.params.id, {
+        personalInformation,
+        location,
+        cita,
+        question
+    }, {
         new:true
     });
     if(!patient) return res.status(404).json({

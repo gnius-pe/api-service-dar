@@ -19,12 +19,15 @@ recibir dos cosas :
 estandar : "2024-02-01T00:00:00.000Z"
 */
 export const createMision = async (req,res) => {
+    console.log("Entro")
     let {startDate, finalDate} = req.body;
     const {nameMision, description, stateMison} = req.body;
     const hour = "00:00:00";
     try {
+        console.log("hola")
         startDate = parseStandardDate(startDate,hour);
         finalDate = parseStandardDate(finalDate,hour);
+        console.log(finalDate)
         const newMision = new MisionModel({
             nameMision,
             description,

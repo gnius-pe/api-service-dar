@@ -39,9 +39,7 @@ const locationSchema = z.object({
 });
 
 const citaSchema = z.object({
-    appointmentDate: z.string().refine(val => !isNaN(Date.parse(val)), {
-        message: "appointmentDate must be a valid date"
-    }).optional(),
+    appointmentDate: z.string().optional(),
     specialty: z.string().optional(),
     appointmentDetail: z.string().optional()
 });
