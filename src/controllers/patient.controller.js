@@ -178,7 +178,10 @@ export const updatePatient = async (req,res) => {
     if(!patient) return res.status(404).json({
         message: 'Paciente no found'
     });
-    res.json(patient);
+    let formatPatient = patient.toObject();
+    formatPatient.personalInformation.birthDate = birthDate;
+    formatPatient.cita.appointmentDate = appointmentDate
+    res.json(formatPatient);
 };
 
 
