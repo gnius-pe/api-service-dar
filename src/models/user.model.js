@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mogoosePaginate from "mongoose-paginate-v2";
 
 const userSchema = new mongoose.Schema({
     numberIdentification:{
@@ -64,4 +65,5 @@ const userSchema = new mongoose.Schema({
     timestamps:true
 })
 
+userSchema.plugin(mogoosePaginate);
 export default mongoose.model('User',userSchema)

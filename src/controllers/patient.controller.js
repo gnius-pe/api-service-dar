@@ -3,15 +3,52 @@ import TestPatient from "../models/patient.model.js";
 import {parseStandardDate ,parseStandardClient} from "../libs/validations.js";
 
 export const getPatients = async (req,res) => {
-    const patients = await TestPatient.find();
+    const option = {
+        page : req.query.page,
+        limit : req.query.limit
+    };
+
+    try {
+        const patients = await TestPatient.paginate({}, option);
+    
+        // Map through the docs and format the dates
+        const formattedDocs = patients.docs.map(patient => {
+            const patientObjet = patient.toObject();
+            return {
+                ...patientObjet._doc, // Spread the document properties
+                personalInformation: {
+                ...patientObjet.personalInformation,
+                birthDate: parseStandardClient(patientObjet.personalInformation.birthDate)
+                },
+                cita: {
+                ...patientObjet.cita,
+                appointmentDate: parseStandardClient(patientObjet.cita.appointmentDate)
+                }
+            };
+        });
+    
+        // Send the modified response
+        res.send({
+          items: {
+            ...patients,
+            docs: formattedDocs // Replace docs with the formatted documents
+          }
+        });
+      } catch (error) {
+        console.error('Error fetching patients:', error);
+        res.status(500).json({ message: 'Error fetching patients' });
+      }
+
+    /** 
+
     let reqPatients = patients.map(patient=>{
         let patientObjet = patient.toObject();
         patientObjet.personalInformation.birthDate = parseStandardClient(patientObjet.personalInformation.birthDate);
         patientObjet.cita.appointmentDate = parseStandardClient(patientObjet.cita.appointmentDate);
         return patientObjet;
     })
-    
-    res.json(reqPatients)
+    */
+    //res.json("reqPatients")
 };
 
 export const createPatient = async (req,res) => { 

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import mogoosePaginate from "mongoose-paginate-v2";
 
 const misonSchema = new mongoose.Schema({
     nameMision : {
@@ -23,4 +24,5 @@ const misonSchema = new mongoose.Schema({
     }
 })
 
+misonSchema.plugin(mogoosePaginate);
 export default mongoose.model('Mision',misonSchema)

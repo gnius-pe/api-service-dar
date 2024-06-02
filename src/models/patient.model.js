@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import mogoosePaginate from "mongoose-paginate-v2";
 
 const personalInformationSchema = new mongoose.Schema({
     name :{
@@ -98,4 +98,5 @@ const testPatientSchema = new mongoose.Schema({
     timestamps: true,
 });
 
+testPatientSchema.plugin(mogoosePaginate);
 export default mongoose.model("TestPatient",testPatientSchema);

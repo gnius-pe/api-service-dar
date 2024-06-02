@@ -67,6 +67,51 @@ export const getMision = async (req,res) => {
 
 
 export const getMisions = async (req,res) => {
+    try {
+        // Obtener los parámetros de paginación desde la solicitud
+        const page = parseInt(req.query.page) || 1; // Página actual, por defecto es 1
+        const limit = parseInt(req.query.limit) || 10; // Número de documentos por página, por defecto es 10
+
+        // Configurar las opciones de paginación
+        const options = {
+            page: page,
+            limit: limit
+        };
+
+        // Usar paginate para obtener los datos paginados
+        const misions = await MisionModel.paginate({}, options);
+
+        // Mapear los documentos para formatear las fechas
+        const formattedDocs = misions.docs.map(mission => {
+            const missionObj = mission.toObject();
+            return {
+                ...missionObj, // Spread the document properties
+                startDate: parseStandardClient(missionObj.startDate),
+                finalDate: parseStandardClient(missionObj.finalDate)
+            };
+        });
+
+        // Construir la respuesta incluyendo la información de paginación
+        const response = {
+            docs: formattedDocs,
+            totalDocs: misions.totalDocs,
+            limit: misions.limit,
+            totalPages: misions.totalPages,
+            page: misions.page,
+            pagingCounter: misions.pagingCounter,
+            hasPrevPage: misions.hasPrevPage,
+            hasNextPage: misions.hasNextPage,
+            prevPage: misions.prevPage,
+            nextPage: misions.nextPage
+        };
+
+        // Enviar la respuesta
+        res.status(200).json(response);
+    } catch (error) {
+        console.error(error.message);
+        res.status(400).json({ error: error.message });
+    }
+    /**
     const misions = await MisionModel.find();
     let formatMisions = misions.map(mission => {
         let missionObj = mission.toObject();
@@ -75,6 +120,7 @@ export const getMisions = async (req,res) => {
         return missionObj;
     });
     res.status(200).json(formatMisions);
+     */
 };
 
 export const deleteMision = async (req,res) => {
