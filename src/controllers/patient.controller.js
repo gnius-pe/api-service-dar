@@ -4,8 +4,8 @@ import {parseStandardDate ,parseStandardClient} from "../libs/validations.js";
 
 export const getPatients = async (req,res) => {
     const option = {
-        page : req.query.page,
-        limit : req.query.limit
+        page : req.query.page || 1,
+        limit : req.query.limit || 10
     };
 
     try {

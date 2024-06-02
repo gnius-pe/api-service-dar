@@ -45,6 +45,32 @@ const router = Router();
 
 /**
  * @swagger
+ * /api/misions:
+ *  get:
+ *      summary: obtienes todos las misiones
+ *      tags:
+ *       - Mision
+ *      parameters:
+    *       - in: query
+    *         name: page
+    *         schema:
+    *          type: integer
+    *         required: false
+    *         description: Número de página (por defecto es 1)
+    *       - in: query
+    *         name: limit
+    *         schema:
+    *          type: integer
+    *         required: false
+    *         description: Número de elementos por página (por defecto es 10)
+ *      responses:
+ *          200:
+ *              description: listado de misiones que se llevaron acabo
+ */
+router.get('/misions',getMisions);
+
+/**
+ * @swagger
  * /api/mision/{id}:
  *  get:
  *      summary: Obtienes una mision
@@ -65,16 +91,30 @@ router.get('/mision/:id',getMision);
 
 /**
  * @swagger
- * /api/misions:
- *  get:
- *      summary: obtienes todos las misiones
+ * /api/mision/{id}:
+ *  put:
+ *      summary: editar una mision
  *      tags:
  *       - Mision
+ *      parameters:
+ *          -   in: path
+ *              name: id
+ *              schema:
+ *              type: string
+ *              required: true
+ *              description: id de la mision
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      $ref: '#/components/schemas/Mision'
  *      responses:
  *          200:
- *              description: listado de misiones que se llevaron acabo
+ *              description: mision actualizado
  */
-router.get('/misions',getMisions);
+router.put('/mision/:id', validateschema(misionSchema),updateMision);
 
 /**
  * @swagger
@@ -116,31 +156,6 @@ router.post('/mision', validateschema(misionSchema) ,createMision);
  */
 router.delete('/mision/:id',deleteMision);
 
-/**
- * @swagger
- * /api/mision/{id}:
- *  put:
- *      summary: editar una mision
- *      tags:
- *       - Mision
- *      parameters:
- *          -   in: path
- *              name: id
- *              schema:
- *              type: string
- *              required: true
- *              description: id de la mision
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      type: object
- *                      $ref: '#/components/schemas/Mision'
- *      responses:
- *          200:
- *              description: mision actualizado
- */
-router.put('/mision/:id', validateschema(misionSchema),updateMision);
+
 
 export default router;

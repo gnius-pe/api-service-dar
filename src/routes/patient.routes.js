@@ -80,6 +80,19 @@ const router = Router();
  *      summary: obtienes todos los pacientes
  *      tags:
  *       - Paciente
+ *      parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: Número de página (por defecto es 1)
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: Número de elementos por página (por defecto es 10)
  *      responses:
  *          200:
  *              description: listado de pacientes

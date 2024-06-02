@@ -67,6 +67,59 @@ const router = Router();
 /**
  * @swagger
  * /api/user:
+ *  get:
+ *      summary: obtienes todos los usuarios
+ *      tags:
+ *       - Gestion Usuario
+ *      parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: Número de página (por defecto es 1)
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         required: false
+ *         description: Número de elementos por página (por defecto es 10)
+ *      responses:
+ *          200:
+ *              description: listado de usuarios
+ */
+router.get('/user',getUserAll);
+
+/**
+ * @swagger
+ * /api/user/{id}:
+ *  put:
+ *      summary: editar al usuario
+ *      tags:
+ *       - Gestion Usuario
+ *      parameters:
+ *          -   in: path
+ *              name: id
+ *              schema:
+ *              type: string
+ *              required: true
+ *              description: id del usuario
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      type: object
+ *                      $ref: '#/components/schemas/Usuario'
+ *      responses:
+ *          200:
+ *              description: usuairo actualizado
+ */
+router.put('/user/:id',updateUser);
+
+/**
+ * @swagger
+ * /api/user:
  *  post:
  *      summary: crea un usuario
  *      tags:
@@ -103,46 +156,6 @@ router.post('/user',createUser);
  *              description: Obtienes los atribustos necesarios del usuario
  */
 router.get('/user/:id',getUser);
-
-/**
- * @swagger
- * /api/user:
- *  get:
- *      summary: obtienes todos los usuarios
- *      tags:
- *       - Gestion Usuario
- *      responses:
- *          200:
- *              description: listado de usuarios
- */
-router.get('/user',getUserAll);
-
-/**
- * @swagger
- * /api/user/{id}:
- *  put:
- *      summary: editar al usuario
- *      tags:
- *       - Gestion Usuario
- *      parameters:
- *          -   in: path
- *              name: id
- *              schema:
- *              type: string
- *              required: true
- *              description: id del usuario
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      type: object
- *                      $ref: '#/components/schemas/Usuario'
- *      responses:
- *          200:
- *              description: usuairo actualizado
- */
-router.put('/user/:id',updateUser);
 
 /**
  * @swagger
