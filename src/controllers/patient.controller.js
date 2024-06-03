@@ -16,14 +16,22 @@ export const getPatients = async (req,res) => {
             const patientObjet = patient.toObject();
             return {
                 ...patientObjet._doc, // Spread the document properties
+                "_id" : patientObjet._id,
                 personalInformation: {
-                ...patientObjet.personalInformation,
-                birthDate: parseStandardClient(patientObjet.personalInformation.birthDate)
+                    ...patientObjet.personalInformation,
+                    birthDate: parseStandardClient(patientObjet.personalInformation.birthDate)
+                },
+                location: {
+                    ...patientObjet.location
                 },
                 cita: {
-                ...patientObjet.cita,
-                appointmentDate: parseStandardClient(patientObjet.cita.appointmentDate)
-                }
+                    ...patientObjet.cita,
+                    appointmentDate: parseStandardClient(patientObjet.cita.appointmentDate)
+                },
+                question: {
+                    ...patientObjet.question
+                },
+                "estate" : patientObjet.estate
             };
         });
     
