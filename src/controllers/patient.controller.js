@@ -90,7 +90,7 @@ export const createPatient = async (req,res) => {
         "firtsNumberPhone" : firtsNumberPhone,
         "secondNumberPhone" : secondNumberPhone || "",
         "sexo" : sexo,
-        "birthDate" : parseStandardDate(birthDate,hour)
+        "birthDate" : birthDate
     }
     console.log(personalInformation)
 
@@ -102,7 +102,7 @@ export const createPatient = async (req,res) => {
     }
 
     const cita = {
-        "appointmentDate" : parseStandardDate(appointmentDate,"00:00:00"),
+        "appointmentDate" : appointmentDate,
         "specialty" : specialty,
         "appointmentDetail" : appointmentDetail
     }
