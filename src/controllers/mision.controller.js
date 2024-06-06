@@ -19,14 +19,8 @@ recibir dos cosas :
 estandar : "2024-02-01T00:00:00.000Z"
 */
 export const createMision = async (req,res) => {
-    console.log("Entro")
-    let {startDate, finalDate} = req.body;
-    const {nameMision, description, stateMison} = req.body;
-    const hour = "00:00:00";
+    const {nameMision, description, stateMison, startDate, finalDate} = req.body;
     try {
-        console.log("hola")
-        startDate = parseStandardDate(startDate,hour);
-        finalDate = parseStandardDate(finalDate,hour);
         console.log(finalDate)
         const newMision = new MisionModel({
             nameMision,
@@ -36,10 +30,7 @@ export const createMision = async (req,res) => {
             stateMison
         });
         const saveMision = await newMision.save();
-        let resMision = saveMision.toObject();
-        resMision.startDate = parseStandardClient(resMision.startDate);
-        resMision.finalDate = parseStandardClient(resMision.finalDate);
-        res.status(200).json(resMision);     
+        res.status(200).json(saveMision);     
     } catch (error) {
         console.error('Error al guardar :' + error);
         res.status(500).json({
@@ -142,12 +133,8 @@ export const deleteMision = async (req,res) => {
 };
 
 export const updateMision = async (req,res) => {
-    let {startDate, finalDate} = req.body;
-    const {nameMision, description, stateMison} = req.body;
-    const hour = "00:00:00";
+    const {nameMision, description, stateMison,startDate, finalDate} = req.body;
     try {
-        startDate = parseStandardDate(startDate,hour);
-        finalDate = parseStandardDate(finalDate,hour);
         const misionId = req.params.id;
         const newtMision = await MisionModel.findByIdAndUpdate(misionId,{
             nameMision,
