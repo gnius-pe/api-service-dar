@@ -1,6 +1,7 @@
 import { json } from "express";
 import TestPatient from "../models/patient.model.js";
 import {parseStandardDate ,parseStandardClient} from "../libs/validations.js";
+import {calculateAge} from "../libs/utils.js";
 
 export const getPatients = async (req,res) => {
     const option = {
@@ -19,7 +20,8 @@ export const getPatients = async (req,res) => {
                 "_id" : patientObjet._id,
                 personalInformation: {
                     ...patientObjet.personalInformation,
-                    birthDate: parseStandardClient(patientObjet.personalInformation.birthDate)
+                    birthDate: parseStandardClient(patientObjet.personalInformation.birthDate),
+                    "age" : calculateAge(patientObjet.personalInformation.birthDate)
                 },
                 location: {
                     ...patientObjet.location
