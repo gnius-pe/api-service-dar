@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 import authRoutes from "./routes/auth.routes.js";
 import patientRouter from "./routes/patient.routes.js";
 import verifiNumberRouter from "./routes/verifyNumber.routes.js";
+import verifyNumberEvenOddRouter  from './routes/meroEvenOdd.routes.js';
 import {swagggerJSDocs} from "../src/libs/swagger.js";
 import cors from "cors";
 import {URL_BD} from "./config.js";
@@ -19,6 +20,8 @@ app.use(cookieParser());
 app.use('/api',authRoutes);
 app.use('/api',patientRouter);
 app.use('/api/v1',verifiNumberRouter);
+app.use('/api',verifyNumberEvenOddRouter);
+
 swagggerJSDocs(app,3000);
 
 
