@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {verifyNumberEvenOdd , grade} from "../controllers/numeroEvenOdd.controller.js";
+import {verifyNumberEvenOdd , grade} from "../controllers/verify.controller.js";
 
 const router = Router();
 

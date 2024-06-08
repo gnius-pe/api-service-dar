@@ -1,5 +1,5 @@
 import request from "supertest";
-import { verifyNumberEvenOdd } from "../controllers/numeroEvenOdd.controller";
+import { verifyNumberEvenOdd } from "../controllers/verify.controller.js";
 import app from "../app.js";
 
 describe('GET /even-or-odd/:number',()=>{
