@@ -147,11 +147,18 @@ export const getPatient = async (req,res) => {
 };
 
 export const deletePatient = async (req,res) => {
-    const patient =  await TestPatient.findByIdAndDelete(req.params.id);
-    if(!patient) return res.status(404).json({
-        message: 'Paciente no found'
-    });
-    res.sendStatus(204).json({message: 'eliminado'});
+    try {
+        const patient =  await TestPatient.findByIdAndDelete(req.params.id);
+        if(!patient) return res.status(404).json({
+            message: 'Paciente no found'
+        });
+        res.sendStatus(204).json({message: 'eliminado'});
+    } catch (error) {
+        console.error('Error al guardar :' + error);
+        res.status(500).json({
+            message:'Error al guardar :' + error
+        });
+    }
 };
 
 export const updatePatient = async (req,res) => {
