@@ -1,6 +1,7 @@
 import { json } from "express";
 import TestPatient from "../models/patient.model.js";
 import {parseStandardDate ,parseStandardClient} from "../libs/validations.js";
+import {calculateAge} from "../libs/utils.js";
 
 export const getPatients = async (req,res) => {
     const option = {
@@ -19,7 +20,8 @@ export const getPatients = async (req,res) => {
                 "_id" : patientObjet._id,
                 personalInformation: {
                     ...patientObjet.personalInformation,
-                    birthDate: parseStandardClient(patientObjet.personalInformation.birthDate)
+                    birthDate: parseStandardClient(patientObjet.personalInformation.birthDate),
+                    "age" : calculateAge(patientObjet.personalInformation.birthDate)
                 },
                 location: {
                     ...patientObjet.location
@@ -145,11 +147,18 @@ export const getPatient = async (req,res) => {
 };
 
 export const deletePatient = async (req,res) => {
-    const patient =  await TestPatient.findByIdAndDelete(req.params.id);
-    if(!patient) return res.status(404).json({
-        message: 'Paciente no found'
-    });
-    res.sendStatus(204).json({message: 'eliminado'});
+    try {
+        const patient =  await TestPatient.findByIdAndDelete(req.params.id);
+        if(!patient) return res.status(404).json({
+            message: 'Paciente no found'
+        });
+        res.sendStatus(204).json({message: 'eliminado'});
+    } catch (error) {
+        console.error('Error al guardar :' + error);
+        res.status(500).json({
+            message:'Error al guardar :' + error
+        });
+    }
 };
 
 export const updatePatient = async (req,res) => {
