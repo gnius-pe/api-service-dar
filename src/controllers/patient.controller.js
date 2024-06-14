@@ -62,68 +62,68 @@ export const getPatients = async (req,res) => {
 };
 
 export const createPatient = async (req,res) => { 
-    const {
-        personalInformation: {
-            name,
-            lastName,
-            numberIdentification,
-            email,
-            firtsNumberPhone,
-            secondNumberPhone,
-            sexo,
-            birthDate
-        },
-        location: {
-            department,
-            province,
-            district,
-            reference
-        },
-        cita: {
-            appointmentDate,
-            specialty,
-            appointmentDetail
-        },
-        question: {
-            questionExamRecent,
-            spiritualSupport,
-            futureActivities
-        },
-        estate
-    } = req.body;
-    const hour = "00:00:00";
-    const personalInformation = {
-        "name" : name,
-        "lastName" :lastName,
-        "numberIdentification" :numberIdentification,
-        "email" : email,
-        "firtsNumberPhone" : firtsNumberPhone,
-        "secondNumberPhone" : secondNumberPhone || "",
-        "sexo" : sexo,
-        "birthDate" : birthDate
-    }
-    console.log(personalInformation)
-
-    const location = {
-        "department" : department,
-        "province" : province,
-        "district" : district,
-        "reference" : reference
-    }
-
-    const cita = {
-        "appointmentDate" : appointmentDate,
-        "specialty" : specialty,
-        "appointmentDetail" : appointmentDetail
-    }
-
-    const question = {
-        "questionExamRecent" :questionExamRecent || false,
-        "spiritualSupport" : spiritualSupport || false,
-        "futureActivities" : futureActivities || false
-    }
-
     try {
+        const {
+            personalInformation: {
+                name,
+                lastName,
+                numberIdentification,
+                email,
+                firtsNumberPhone,
+                secondNumberPhone,
+                sexo,
+                birthDate
+            },
+            location: {
+                department,
+                province,
+                district,
+                reference
+            },
+            cita: {
+                appointmentDate,
+                specialties,
+                appointmentDetail
+            },
+            question: {
+                questionExamRecent,
+                spiritualSupport,
+                futureActivities
+            },
+            estate
+        } = req.body;
+
+        const hour = "00:00:00";
+        const personalInformation = {
+            "name" : name,
+            "lastName" :lastName,
+            "numberIdentification" :numberIdentification,
+            "email" : email,
+            "firtsNumberPhone" : firtsNumberPhone,
+            "secondNumberPhone" : secondNumberPhone || "",
+            "sexo" : sexo,
+            "birthDate" : birthDate
+        }
+
+        const location = {
+            "department" : department,
+            "province" : province,
+            "district" : district,
+            "reference" : reference
+        }
+
+        const cita = {
+            "appointmentDate" : appointmentDate,
+            "specialties" : specialties || [],
+            "appointmentDetail" : appointmentDetail
+        }
+
+        const question = {
+            "questionExamRecent" :questionExamRecent || false,
+            "spiritualSupport" : spiritualSupport || false,
+            "futureActivities" : futureActivities || false
+        }
+        
         const newPatient = new TestPatient({personalInformation, location, cita, question, estate});
         const savePatienr = await newPatient.save();
         let formatPatient = savePatienr.toObject();
