@@ -9,13 +9,15 @@ import userRouter from "./routes/userManagement.routes.js";
 import {swagggerJSDocs} from "../src/libs/swagger.js";
 import cors from "cors";
 import figlet from "figlet";
+import { CLIENT_URL, DEV_URL} from './config.js';
 
 const app = express();
 
 app.use(cors({
-    origin:['http://localhost:5173','https://gestion-dar-h74f4.ondigitalocean.app'],
+    origin:[DEV_URL,CLIENT_URL],
     credentials:true
 }));
+
 
 app.use(morgan('dev'));
 app.use(express.json());
