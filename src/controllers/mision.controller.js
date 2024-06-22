@@ -1,5 +1,5 @@
 import MisionModel from "../models/mision.model.js";
-import {parseStandardDate, parseStandardClient} from "../libs/validations.js";
+//import {parseStandardDate, parseStandardClient} from "../libs/validations.js";
 
 /**
  * if (personalInformation.birthDate) {
@@ -19,15 +19,27 @@ recibir dos cosas :
 estandar : "2024-02-01T00:00:00.000Z"
 */
 export const createMision = async (req,res) => {
-    const {nameMision, description, stateMison, startDate, finalDate} = req.body;
+    const {
+        nameMision, 
+        description, 
+        stateMison, 
+        startDate, 
+        finalDate, 
+        nationality, 
+        department, 
+        district
+    } = req.body;
     try {
-        console.log(finalDate)
+
         const newMision = new MisionModel({
             nameMision,
             description,
             startDate,
             finalDate,
-            stateMison
+            stateMison,
+            nationality, 
+            department, 
+            district
         });
         const saveMision = await newMision.save();
         res.status(200).json(saveMision);     
@@ -44,17 +56,12 @@ export const getMision = async (req,res) => {
         const misionId = req.params.id;
         const mision = await MisionModel.findById(misionId);  
         if(!mision) return res.status(404).json({message:"Mision no found"});
-
-        let misionFormat = mision.toObject();
-        misionFormat.startDate = parseStandardClient(misionFormat.startDate);
-        misionFormat.finalDate = parseStandardClient(misionFormat.finalDate);
-        res.status(200).json(misionFormat);
+        res.status(200).json(mision);
     } catch (error) {
         console.log(error.message)
         res.status(400).json({"error" : error.message})
     }
 };
-
 
 
 export const getMisions = async (req,res) => {
@@ -73,6 +80,7 @@ export const getMisions = async (req,res) => {
         const misions = await MisionModel.paginate({}, options);
 
         // Mapear los documentos para formatear las fechas
+        /**
         const formattedDocs = misions.docs.map(mission => {
             const missionObj = mission.toObject();
             return {
@@ -95,9 +103,9 @@ export const getMisions = async (req,res) => {
             prevPage: misions.prevPage,
             nextPage: misions.nextPage
         };
-
+ */
         // Enviar la respuesta
-        res.status(200).json(response);
+        res.status(200).json(misions);
     } catch (error) {
         console.error(error.message);
         res.status(400).json({ error: error.message });
@@ -119,12 +127,14 @@ export const deleteMision = async (req,res) => {
         const misionId = req.params.id;
         const mision = await MisionModel.findByIdAndDelete(misionId);
         if(!mision) return res.status(404).json({message: 'mision no found'});
+        /*
         let misionFormat = mision.toObject();
         misionFormat.startDate = parseStandardClient(misionFormat.startDate);
         misionFormat.finalDate = parseStandardClient(misionFormat.finalDate);
+        */
         res.json({
                 message: 'delete object',
-                "mision": misionFormat
+                "mision": mision
         });
     } catch (error) {
         console.log(error.message);
@@ -133,7 +143,9 @@ export const deleteMision = async (req,res) => {
 };
 
 export const updateMision = async (req,res) => {
-    const {nameMision, description, stateMison,startDate, finalDate} = req.body;
+    const {nameMision, description, stateMison,startDate, finalDate, nationality, 
+        department, 
+        district} = req.body;
     try {
         const misionId = req.params.id;
         const newtMision = await MisionModel.findByIdAndUpdate(misionId,{
@@ -141,19 +153,20 @@ export const updateMision = async (req,res) => {
             description,
             startDate,
             finalDate,
-            stateMison
-        },{
+            stateMison,
+            nationality, 
+            department, 
+            district
+        },{ 
             new : true
         });
         if(!newtMision)return res.status(404).json({
             message: 'Mision no found'
         });
-        let misionFormat = newtMision.toObject();
-        misionFormat.startDate = parseStandardClient(misionFormat.startDate);
-        misionFormat.finalDate = parseStandardClient(misionFormat.finalDate);
+        //let misionFormat = newtMision.toObject();
         res.status(200).json({
             "message" : "update mision",
-            "mision" : misionFormat
+            "mision" : newtMision
         });
     } catch (error) {
         res.status(400).json({"error" : error.message});

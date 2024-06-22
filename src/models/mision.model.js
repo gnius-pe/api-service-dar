@@ -21,7 +21,16 @@ const misonSchema = new mongoose.Schema({
     },
     stateMison : {
         type: String,
-    }
+    },
+    nationality :{
+        type: String
+    }, 
+    department :{
+        type: String
+    }, 
+    district :{
+        type: String
+    },
 })
 
 misonSchema.plugin(mogoosePaginate);

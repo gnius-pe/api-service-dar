@@ -27,18 +27,33 @@ const router = Router();
  *              finalDate:
  *                  type: date
  *                  description: fecha de final de la mision
+ *              nationality:
+ *                   type: string
+ *                   description: Pais en el que sera ejecutado la mision
+ *              department:
+ *                   type: string
+ *                   description: Departamento en el que sera ejecutado la mision
+ *              district:
+ *                   type : string
+ *                   description: Distrito en el que sera ejecutado la mision
  *          required:
  *              -nameMision
  *              -description
  *              -stateMison
  *              -startDate
  *              -finalDate
+ *              -nationality
+ *              -department
+ *              -district
  *          example:
  *              nameMision: Campaña de Donación de Sangre
  *              description: Organizar colectas de sangre y promover la donación voluntaria para garantizar el abastecimiento de sangre en los hospitales y centros de salud.
  *              stateMison: activo
  *              startDate: 2024-01-15T00:00:00.000Z
  *              finalDate: 2024-02-15T00:00:00.000Z
+ *              nationality: Peru
+ *              department: Piura
+ *              district : Sechura
  */
 
 /**DOCUEMTACION DE LAS API EN EL SWAGGER */
