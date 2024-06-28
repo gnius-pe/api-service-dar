@@ -149,14 +149,15 @@ export const getPatient = async (req,res) => {
 export const deletePatient = async (req,res) => {
     try {
         const patient =  await TestPatient.findByIdAndDelete(req.params.id);
+        console.log(req.params.id);
         if(!patient) return res.status(404).json({
             message: 'Paciente no found'
         });
-        res.sendStatus(204).json({message: 'eliminado'});
+        res.status(200).json({message: 'eliminated patient'});
     } catch (error) {
-        console.error('Error al guardar :' + error);
+        console.error('waiting error :' + error);
         res.status(500).json({
-            message:'Error al guardar :' + error
+            message:'waiting error :' + error
         });
     }
 };
