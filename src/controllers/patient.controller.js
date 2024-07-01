@@ -2,6 +2,7 @@ import { json } from "express";
 import TestPatient from "../models/patient.model.js";
 import {parseStandardDate ,parseStandardClient} from "../libs/validations.js";
 import {calculateAge} from "../libs/utils.js";
+import {buildPDF} from "../libs/pdfKit.js";
 
 export const getPatients = async (req,res) => {
     const option = {
@@ -239,4 +240,15 @@ export const updatePatient = async (req,res) => {
     res.json(formatPatient);
 };
 
+export const generatePDF = async (req,res) => {
+    const stream = res.writeHead(200,{
+        "Content-Type" : "application/pdf",
+        "Content-Disposition" : "attachment; filename=invoice.pdf"
+    })
+    buildPDF((data)=>{
+        stream.write(data)
+    },() =>{
+        stream.end()
+    });
+};
 

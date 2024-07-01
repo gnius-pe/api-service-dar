@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { authRequired } from "../middlewares/validateToken.js";
-import {getPatients,createPatient,getPatient,updatePatient,deletePatient} from "../controllers/patient.controller.js"
+import {getPatients,createPatient,getPatient,updatePatient,deletePatient,generatePDF} from "../controllers/patient.controller.js"
 import { validateschema } from "../middlewares/validator.middleware.js";
 import {patientSchema} from "../schemas/patient.schema.js";
+
 
 const router = Router();
 
@@ -241,4 +242,6 @@ router.delete('/patient/:id',deletePatient);
  */
 router.put('/patient/:id',updatePatient);
 //router.put('/patient/:id',authRequired,updatePatient);
+
+router.get('/patient-pdf',generatePDF);
 export default router;
