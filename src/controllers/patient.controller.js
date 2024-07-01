@@ -1,7 +1,7 @@
 import { json } from "express";
 import TestPatient from "../models/patient.model.js";
 import { parseStandardDate, parseStandardClient } from "../libs/validations.js";
-import { calculateAge } from "../libs/utils.js";
+import { calculateAge,getCurrentDateTime ,parseDate} from "../libs/utils.js";
 import { buildPDF } from "../libs/pdfKit.js";
 import puppeteer from "puppeteer";
 import pdf from "html-pdf";
@@ -234,96 +234,194 @@ export const updatePatient = async (req, res) => {
 };
 
 export const generatePDF = async (req, res) => {
-  /** 
-    const stream = res.writeHead(200,{
-        "Content-Type" : "application/pdf",
-        "Content-Disposition" : "attachment; filename=invoice.pdf"
-    })
-    buildPDF((data)=>{
-        stream.write(data)
-    },() =>{
-        stream.end()
-    });
-    */
-    const data = {
-        fecha: '10/12/2023 10:01',
-        numeroFicha: '123456',
-        codigo: 'ABCDE',
-        nombresPaciente: 'Juan Pérez',
-        edad: '30',
-        direccion: 'Av. Ejemplo 123',
-        referencia: 'Cerca del parque central',
-        distrito: 'Lima',
-        provincia: 'Lima',
-        departamento: 'Lima',
-        numeroDNI: '12345678',
-        fechaNacimiento: '01/01/1990',
-        telefono: '987654321',
-        areas: 'Área 1, Área 2, Área 3',
-        fechaHora: '10/12/2023 12:00',
-        certificadoMedico: 'Si',
-        peso: '70 kg',
-        altura: '170 cm',
-        presionArterial: '120/80 mmHg',
-        temperatura: '36.5°C',
-        horario: 'Mañana',
-        observaciones: 'Sin observaciones adicionales',
-        procedimientos: 'Procedimiento A, Procedimiento B, Procedimiento C',
-        resArea1: 'Resultado A',
-        resArea2: 'Resultado B',
-        resArea3: 'Resultado C',
-        resArea4: 'Resultado D',
-        resArea5: 'Resultado E',
-        resArea6: 'Resultado F'
+
+  const patient = await TestPatient.findById(req.params.id);
+
+  const htmlContent = `
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 5px;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>${getCurrentDateTime()}</h3>
+    <table style="width: 100%">
+      <tr>
+        <td rowspan="4"><img src=https://i.postimg.cc/nrBf4PDY/dar.png alt="cer" width="200" height="80" /></td>
+        <td colspan="2">Mision "San diego - la Ensenada"</td> 
+      </tr>
+      <tr>
+        <td>Ficha</td>
+        <td>[N ficha]</td>
+      </tr>
+      <tr>
+        <td>Registro</td>
+        <td>${patient.personalInformation.numberIdentification}</td>
+      </tr>
+      <tr>
+        <td>Estado</td>
+        <td>${patient.estate}</td>
+      </tr>
+    </table>
+
+    <br>
+
+    <table style="width: 100%">
+      <tr>
+        <td>Registro:</td>
+        <td>${patient.personalInformation.numberIdentification}</td>
+        <td>Paciente:</td>
+        <td>${patient.personalInformation.name} ${patient.personalInformation.lastName}</td>
+        <td>Edad:</td>
+        <td>${calculateAge(patient.personalInformation.birthDate)}</td>
+      </tr>
+      <tr>
+        <td>Dirección:</td>
+        <td colspan="5">X</td>
+      </tr>
+      <tr>
+        <td>Referencia:</td>
+        <td colspan="5">${patient.location.reference}</td>
+      </tr>
+      <tr>
+        <td>Distrito:</td>
+        <td>${patient.location.district}</td>
+        <td>Provincia:</td>
+        <td>${patient.location.province}</td>
+        <td>Departamento:</td>
+        <td>${patient.location.department}</td>
+      </tr>
+      <tr>
+        <td>DNI:</td>
+        <td>${patient.personalInformation.numberIdentification}</td>
+        <td>Fecha de nacimiento:</td>
+        <td>${parseDate(patient.personalInformation.birthDate)}</td>
+        <td>Teléfono 01:</td>
+        <td>${patient.personalInformation.firtsNumberPhone}</td>
+      </tr>
+      <tr>
+        <td colspan="6">Areas: ${patient.cita.specialties.map( mySpecialty => { return mySpecialty.specialty} )}</td>
+        
+      </tr>
+      <tr>
+        <td>Ficha:</td>
+        <td>[N° Ficha]</td>
+        <td>Fecha:</td>
+        <td>${getCurrentDateTime()}</td>
+        <td>Cert. médico:</td>
+        <td>Si/No</td>
+      </tr>
+    </table>
+    
+    <table style="width:100%">
+      <tr>
+        <td colspan="3" style="border-top: 1px solid black; border-bottom: none;">
+          Declaro a todos los efectos que estoy de acuerdo con todos los servicios
+          en los que participaré y que autorizo el uso de mi imagen (en fotografía o
+          video) en la publicidad del trabajo realizado por la entidad, sin carga
+          alguna para ésta.
+        </td>
+      </tr>
+      <tr>
+        <td style="border: none;">Fecha: ${getCurrentDateTime()}</td>
+        <td style="border: none;">Nombre: ${patient.personalInformation.name + " "+ patient.personalInformation.lastName}</td>
+        <td style="border: none;">Firma:     ---------------------</td>
+        <br>
+      </tr>
+    </table>
+    
+    <br>
+
+    <table style="width: 100%" >
+      <tr>
+        <td colspan="5" style="border-top: 1px solid black; border-bottom: none;">A completar por los profesionales:</td>
+      </tr>
+      <tr>
+        <td style="border: none;">Peso:</td>
+        <td style="border: none;">Altura:</td>
+        <td style="border: none;">P.A.:</td>
+        <td style="border: none;">Temperatura:</td>
+        <td style="border: none;">Horario:</td>
+      </tr>
+    </table>
+
+    <br>
+
+    <table style="width: 100%">
+      <tr>
+        <td colspan="2" style="border: none;">A completar por lo profesionales :</td>
+      </tr>
+      <tr>
+        <td ">Observaiones/Reenvio : ________________________________________________________________
+          ___________________________________________________________________________________
+          ___________________________________________________________________________________
+          <br>
+          </td>
+      </tr>
+      
+      <tr>
+        <td>Procedimineto: _______________________________________________________________________
+          ___________________________________________________________________________________
+          ___________________________________________________________________________________
+          ___________________________________________________________________________________
+          ___________________________________________________________________________________
+          ___________________________________________________________________________________
+          ___________________________________________________________________________________
+          ___________________________________________________________________________________</td>
+      </tr>
+      
+    </table>
+
+    <br>
+    <table style="width: 100%">
+      <tr>
+        <td><br><br><br>Res. Area 1</td>
+        <td><br><br><br>Res. Area 2</td>
+        <td><br><br><br>Res. Area 3</td>
+      </tr>
+      <tr>
+        <td><br><br><br>Res. Area 4</td>
+        <td><br><br><br>Res. Area 5</td>
+        <td><br><br><br>Res. Area 6</td>
+      </tr>
+    </table>
+  </body>
+</html>
+
+    `; 
+    const options = {
+        format: 'Letter',
+        timeout: 30000,
+        border: {
+            top: '0.3in',    // Margen superior
+            right: '0.5in', // Margen derecho
+            bottom: '1in',  // Margen inferior
+            left: '0.5in'   // Margen izquierdo
+        }
     };
-    /** 
-  const htmlContent =
-    '<!DOCTYPE html> <html> <head> <style> table, th, td { border: 1px solid black; border-collapse: collapse; } th, td { padding: 5px; text-align: left; } </style> </head> <body> <h2>10/12/2023 10:01</h2> <table style="width: 100%"> <tr> <td rowspan="2"> <img src="/template/logo.jpg" alt="cer" width="50" height="50" /> </td> <td colspan="2">Misión "San Diego - La Ensenada"</td> </tr> <tr> <td>Ficha</td> <td>[N° Ficha]</td> </tr> <tr> <td>Registro:</td> <td>[código]</td> </tr> <tr> <td>Estado:</td> <td>[código]</td> </tr> </table> <table> <tr> <td>Registro:</td> <td>[código]</td> <td>Paciente</td> <td>[Nombres y apellidos paciente]</td> <td>Edad:</td> <td>[edad]</td> </tr> <tr> <td>Dirección:</td> <td colspan="5">[Dirección]</td> </tr> <tr> <td>Referencia:</td> <td colspan="5">[Referencia]</td> </tr> <tr> <td>Distrito:</td> <td>[Distrito]</td> <td>Provincia:</td> <td>[Provincia]</td> <td>Departamento:</td> <td>[Departamento]</td> </tr> <tr> <td>DNI:</td> <td>[N° DNI]</td> <td>Fecha de nacimiento:</td> <td>[Fecha deacimiento]</td> <td>Teléfono 01:</td> <td>[N° telefono]</td> </tr> <tr> <td>Areas:</td> <td>[N° Ficha]</td> <td>Fecha:</td> <td>Area01/area02/area03<br />[Fecha y hora]</td> <td>Cert. médico:</td> <td>Si/No</td> </tr> </table> <p> Declaro a todos los efectos que estoy de acuerdo con todos los servicios en los que participaré y que autorizo el uso de mi imagen (en fotografía o video) en la publicidad del trabajo realizado por la entidad, sin carga alguna para ésta. </p> <table style="width: 100%"> <tr> <td>Fecha:</td> <td>Nombre:</td> <td colspan="3">Firma:</td> </tr> </table> <h3>A completar por los profesionales:</h3> <table style="width: 100%"> <tr> <td>Peso:</td> <td>Altura:</td> <td>P.A.:</td> <td>Temperatura:</td> <td>Horario:</td> </tr> </table> <h3>A completar por el responsable técnico:</h3> <table style="width: 100%"> <tr> <td colspan="5">Observaciones/Reenvío</td> </tr> <tr> <td colspan="5">Procedimientos:</td> </tr> </table> <table style="width: 100%"> <tr> <td>Res. Area 1</td> <td>Res. Area 2</td> <td>Res. Area 3</td> </tr> <tr> <td>Res. Area 4</td> <td>Res. Area 5</td> <td>Res. Area 6</td> </tr> </table> </body> </html>'; // Aquí debes proporcionar tu HTML
-*/
-    const htmlContent = `<!DOCTYPE html>
-    <html>
-    <head>
-        <style>
-            table, th, td {
-                border: 1px solid black;
-                border-collapse: collapse;
-                padding: 5px;
-                text-align: left;
-            }
-        </style>
-    </head>
-    <body>
-        <h2>${data.fecha}</h2>
-        <table style="width: 100%">
-            <tr>
-                <td rowspan="2"><img src="/template/logo.jpg" alt="Logo" width="50" height="50" /></td>
-                <td colspan="2">Misión "San Diego - La Ensenada"</td>
-            </tr>
-            <tr>
-                <td>Ficha</td>
-                <td>${data.numeroFicha}</td>
-            </tr>
-            <tr>
-                <td>Registro:</td>
-                <td>${data.codigo}</td>
-            </tr>
-            <!-- Más contenido aquí -->
-        </table>
-        <!-- Más contenido aquí -->
-    </body>
-    </html>`;
-  pdf.create(htmlContent).toStream((err, stream) => {
-    if (err) {
-      console.error(err);
-      res.status(500).send("Error al generar el PDF");
-      return;
-    }
+    pdf.create(htmlContent,options).toStream((err, stream) => {
+        if (err) {
+        console.error(err);
+        res.status(500).send("Error al generar el PDF");
+        return;
+        }
 
-    res.writeHead(200, {
-      "Content-Type": "application/pdf",
-      "Content-Disposition": "attachment; filename=invoice.pdf",
+        res.writeHead(200, {
+        "Content-Type": "application/pdf",
+        "Content-Disposition": "attachment; filename=invoice.pdf",
+        });
+        stream.pipe(res);
     });
-
-    stream.pipe(res);
-  });
 };

@@ -243,5 +243,5 @@ router.delete('/patient/:id',deletePatient);
 router.put('/patient/:id',updatePatient);
 //router.put('/patient/:id',authRequired,updatePatient);
 
-router.get('/patient-pdf',generatePDF);
+router.get('/patient-pdf/:id',generatePDF);
 export default router;
