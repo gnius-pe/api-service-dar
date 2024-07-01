@@ -8,12 +8,12 @@ import misionRouter from "./routes/mision.routes.js";
 import userRouter from "./routes/userManagement.routes.js";
 import specialtyRouter from "./routes/specialty.routes.js";
 import cors from "cors";
-import { CLIENT_URL, DEV_URL} from './config.js';
+import { CLIENT_URL, DEV_URL, CLIENT_URL_DAR} from './config.js';
 
 const app = express();
 
 app.use(cors({
-    origin:[DEV_URL,CLIENT_URL],
+    origin:[DEV_URL,CLIENT_URL,CLIENT_URL_DAR],
     credentials:true
 }));
 app.use(morgan('dev'));
