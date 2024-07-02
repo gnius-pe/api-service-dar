@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { authRequired } from "../middlewares/validateToken.js";
-import {getPatients,createPatient,getPatient,updatePatient,deletePatient} from "../controllers/patient.controller.js"
+import {getPatients,createPatient,getPatient,updatePatient,deletePatient,generatePDF} from "../controllers/patient.controller.js"
 import { validateschema } from "../middlewares/validator.middleware.js";
 import {patientSchema} from "../schemas/patient.schema.js";
+
 
 const router = Router();
 
@@ -68,7 +69,7 @@ const router = Router();
  *                          items:
  *                              type: object
  *                              properties:
- *                                  specialty:
+ *                                  label:
  *                                      type: string
  *                                      description: especialidad médica
  *                                  value:
@@ -116,9 +117,9 @@ const router = Router();
  *              cita:
  *                  appointmentDate: 2024-06-20
  *                  specialties: 
- *                      - specialty: Cardiologia
+ *                      - label: Cardiologia
  *                        value: "1"
- *                      - specialty: Endocrinologia
+ *                      - label: Endocrinologia
  *                        value: "3"
  *                  appointmentDetail: Consulta general
  *              question:
@@ -241,4 +242,24 @@ router.delete('/patient/:id',deletePatient);
  */
 router.put('/patient/:id',updatePatient);
 //router.put('/patient/:id',authRequired,updatePatient);
+
+/**
+ * @swagger
+ * /api/patient-pdf/{id}:
+ *  get:
+ *      summary: Obtiener pdf
+ *      tags:
+ *       - Paciente
+ *      parameters:
+ *          -   in: path
+ *              name: id
+ *              schema:
+ *              type: string
+ *              required: true
+ *              description: id del paciente
+ *      responses:
+ *          200:
+ *              description: obtienes un pdf
+ */
+router.get('/patient-pdf/:id',generatePDF);
 export default router;

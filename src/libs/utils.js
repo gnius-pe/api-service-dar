@@ -19,3 +19,26 @@ export const calculateAge = (birthDatePatient) => {
 
     return age;
   }
+
+export const getCurrentDateTime = () => {
+    const currentDate = new Date();
+  
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = currentDate.getDate().toString().padStart(2, '0');
+  
+    const hours = currentDate.getHours().toString().padStart(2, '0');
+    const minutes = currentDate.getMinutes().toString().padStart(2, '0');
+  
+    return `${month}/${day}/${year} ${hours}:${minutes}`;
+  }
+
+  export const parseDate = (inputDate) => {
+    const date = new Date(inputDate);
+  
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+  
+    return `${month}/${day}/${year}`;
+  }
