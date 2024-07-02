@@ -105,6 +105,10 @@ const testPatientSchema = new mongoose.Schema(
     estate: {
       type: String,
     },
+    serialnumber:{
+      type: Number,
+      default: 0,
+    }
   },
   {
     timestamps: true,

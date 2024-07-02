@@ -243,5 +243,23 @@ router.delete('/patient/:id',deletePatient);
 router.put('/patient/:id',updatePatient);
 //router.put('/patient/:id',authRequired,updatePatient);
 
+/**
+ * @swagger
+ * /api/patient-pdf/{id}:
+ *  get:
+ *      summary: Obtiener pdf
+ *      tags:
+ *       - Paciente
+ *      parameters:
+ *          -   in: path
+ *              name: id
+ *              schema:
+ *              type: string
+ *              required: true
+ *              description: id del paciente
+ *      responses:
+ *          200:
+ *              description: obtienes un pdf
+ */
 router.get('/patient-pdf/:id',generatePDF);
 export default router;

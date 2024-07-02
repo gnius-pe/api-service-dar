@@ -1,9 +1,7 @@
 import { json } from "express";
 import TestPatient from "../models/patient.model.js";
 import { parseStandardDate, parseStandardClient } from "../libs/validations.js";
-import { calculateAge,getCurrentDateTime ,parseDate} from "../libs/utils.js";
-import { buildPDF } from "../libs/pdfKit.js";
-import puppeteer from "puppeteer";
+import { calculateAge, getCurrentDateTime, parseDate } from "../libs/utils.js";
 import pdf from "html-pdf";
 
 export const getPatients = async (req, res) => {
@@ -234,194 +232,214 @@ export const updatePatient = async (req, res) => {
 };
 
 export const generatePDF = async (req, res) => {
+  try {
+    const patient = await TestPatient.findById(req.params.id);
+    if (!patient) return res.status(404).json({message: "Paciente no found"});
+    const htmlContent = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <style>
+            table,
+            th,
+            td {
+              border: 1px solid black;
+              border-collapse: collapse;
+            }
+            th,
+            td {
+              padding: 5px;
+              text-align: left;
+            }
+          </style>
+        </head>
+        <body>
+          <h3>${getCurrentDateTime()}</h3>
+          <table style="width: 100%">
+            <tr>
+              <td rowspan="4"><img src=https://i.postimg.cc/nrBf4PDY/dar.png alt="cer" width="200" height="80" /></td>
+              <td colspan="2">Mision "San diego - la Ensenada"</td> 
+            </tr>
+            <tr>
+              <td>Ficha</td>
+              <td>[N ficha]</td>
+            </tr>
+            <tr>
+              <td>Registro</td>
+              <td>${patient.personalInformation.numberIdentification}</td>
+            </tr>
+            <tr>
+              <td>Estado</td>
+              <td>${patient.estate}</td>
+            </tr>
+          </table>
 
-  const patient = await TestPatient.findById(req.params.id);
-
-  const htmlContent = `
-<!DOCTYPE html>
-<html>
-  <head>
-    <style>
-      table,
-      th,
-      td {
-        border: 1px solid black;
-        border-collapse: collapse;
-      }
-      th,
-      td {
-        padding: 5px;
-        text-align: left;
-      }
-    </style>
-  </head>
-  <body>
-    <h3>${getCurrentDateTime()}</h3>
-    <table style="width: 100%">
-      <tr>
-        <td rowspan="4"><img src=https://i.postimg.cc/nrBf4PDY/dar.png alt="cer" width="200" height="80" /></td>
-        <td colspan="2">Mision "San diego - la Ensenada"</td> 
-      </tr>
-      <tr>
-        <td>Ficha</td>
-        <td>[N ficha]</td>
-      </tr>
-      <tr>
-        <td>Registro</td>
-        <td>${patient.personalInformation.numberIdentification}</td>
-      </tr>
-      <tr>
-        <td>Estado</td>
-        <td>${patient.estate}</td>
-      </tr>
-    </table>
-
-    <br>
-
-    <table style="width: 100%">
-      <tr>
-        <td>Registro:</td>
-        <td>${patient.personalInformation.numberIdentification}</td>
-        <td>Paciente:</td>
-        <td>${patient.personalInformation.name} ${patient.personalInformation.lastName}</td>
-        <td>Edad:</td>
-        <td>${calculateAge(patient.personalInformation.birthDate)}</td>
-      </tr>
-      <tr>
-        <td>Dirección:</td>
-        <td colspan="5">X</td>
-      </tr>
-      <tr>
-        <td>Referencia:</td>
-        <td colspan="5">${patient.location.reference}</td>
-      </tr>
-      <tr>
-        <td>Distrito:</td>
-        <td>${patient.location.district}</td>
-        <td>Provincia:</td>
-        <td>${patient.location.province}</td>
-        <td>Departamento:</td>
-        <td>${patient.location.department}</td>
-      </tr>
-      <tr>
-        <td>DNI:</td>
-        <td>${patient.personalInformation.numberIdentification}</td>
-        <td>Fecha de nacimiento:</td>
-        <td>${parseDate(patient.personalInformation.birthDate)}</td>
-        <td>Teléfono 01:</td>
-        <td>${patient.personalInformation.firtsNumberPhone}</td>
-      </tr>
-      <tr>
-        <td colspan="6">Areas: ${patient.cita.specialties.map( mySpecialty => { return mySpecialty.specialty} )}</td>
-        
-      </tr>
-      <tr>
-        <td>Ficha:</td>
-        <td>[N° Ficha]</td>
-        <td>Fecha:</td>
-        <td>${getCurrentDateTime()}</td>
-        <td>Cert. médico:</td>
-        <td>Si/No</td>
-      </tr>
-    </table>
-    
-    <table style="width:100%">
-      <tr>
-        <td colspan="3" style="border-top: 1px solid black; border-bottom: none;">
-          Declaro a todos los efectos que estoy de acuerdo con todos los servicios
-          en los que participaré y que autorizo el uso de mi imagen (en fotografía o
-          video) en la publicidad del trabajo realizado por la entidad, sin carga
-          alguna para ésta.
-        </td>
-      </tr>
-      <tr>
-        <td style="border: none;">Fecha: ${getCurrentDateTime()}</td>
-        <td style="border: none;">Nombre: ${patient.personalInformation.name + " "+ patient.personalInformation.lastName}</td>
-        <td style="border: none;">Firma:     ---------------------</td>
-        <br>
-      </tr>
-    </table>
-    
-    <br>
-
-    <table style="width: 100%" >
-      <tr>
-        <td colspan="5" style="border-top: 1px solid black; border-bottom: none;">A completar por los profesionales:</td>
-      </tr>
-      <tr>
-        <td style="border: none;">Peso:</td>
-        <td style="border: none;">Altura:</td>
-        <td style="border: none;">P.A.:</td>
-        <td style="border: none;">Temperatura:</td>
-        <td style="border: none;">Horario:</td>
-      </tr>
-    </table>
-
-    <br>
-
-    <table style="width: 100%">
-      <tr>
-        <td colspan="2" style="border: none;">A completar por lo profesionales :</td>
-      </tr>
-      <tr>
-        <td ">Observaiones/Reenvio : ________________________________________________________________
-          ___________________________________________________________________________________
-          ___________________________________________________________________________________
           <br>
-          </td>
-      </tr>
-      
-      <tr>
-        <td>Procedimineto: _______________________________________________________________________
-          ___________________________________________________________________________________
-          ___________________________________________________________________________________
-          ___________________________________________________________________________________
-          ___________________________________________________________________________________
-          ___________________________________________________________________________________
-          ___________________________________________________________________________________
-          ___________________________________________________________________________________</td>
-      </tr>
-      
-    </table>
 
-    <br>
-    <table style="width: 100%">
-      <tr>
-        <td><br><br><br>Res. Area 1</td>
-        <td><br><br><br>Res. Area 2</td>
-        <td><br><br><br>Res. Area 3</td>
-      </tr>
-      <tr>
-        <td><br><br><br>Res. Area 4</td>
-        <td><br><br><br>Res. Area 5</td>
-        <td><br><br><br>Res. Area 6</td>
-      </tr>
-    </table>
-  </body>
-</html>
+          <table style="width: 100%">
+            <tr>
+              <td>Registro:</td>
+              <td>${patient.personalInformation.numberIdentification}</td>
+              <td>Paciente:</td>
+              <td>${patient.personalInformation.name} ${
+      patient.personalInformation.lastName
+    }</td>
+              <td>Edad:</td>
+              <td>${calculateAge(patient.personalInformation.birthDate)}</td>
+            </tr>
+            <tr>
+              <td>Dirección:</td>
+              <td colspan="5">X</td>
+            </tr>
+            <tr>
+              <td>Referencia:</td>
+              <td colspan="5">${patient.location.reference}</td>
+            </tr>
+            <tr>
+              <td>Distrito:</td>
+              <td>${patient.location.district}</td>
+              <td>Provincia:</td>
+              <td>${patient.location.province}</td>
+              <td>Departamento:</td>
+              <td>${patient.location.department}</td>
+            </tr>
+            <tr>
+              <td>DNI:</td>
+              <td>${patient.personalInformation.numberIdentification}</td>
+              <td>Fecha de nacimiento:</td>
+              <td>${parseDate(patient.personalInformation.birthDate)}</td>
+              <td>Teléfono 01:</td>
+              <td>${patient.personalInformation.firtsNumberPhone}</td>
+            </tr>
+            <tr>
+              <td colspan="6">Areas: ${patient.cita.specialties.map(
+                (mySpecialty) => {
+                  return mySpecialty.specialty;
+                }
+              )}</td>
+              
+            </tr>
+            <tr>
+              <td>Ficha:</td>
+              <td>[N° Ficha]</td>
+              <td>Fecha:</td>
+              <td>${getCurrentDateTime()}</td>
+              <td>Cert. médico:</td>
+              <td>Si/No</td>
+            </tr>
+          </table>
+          
+          <table style="width:100%">
+            <tr>
+              <td colspan="3" style="border-top: 1px solid black; border-bottom: none;">
+                Declaro a todos los efectos que estoy de acuerdo con todos los servicios
+                en los que participaré y que autorizo el uso de mi imagen (en fotografía o
+                video) en la publicidad del trabajo realizado por la entidad, sin carga
+                alguna para ésta.
+              </td>
+            </tr>
+            <tr>
+              <td style="border: none;">Fecha: ${getCurrentDateTime()}</td>
+              <td style="border: none;">Nombre: ${
+                patient.personalInformation.name +
+                " " +
+                patient.personalInformation.lastName
+              }</td>
+              <td style="border: none;">Firma:     ---------------------</td>
+              <br>
+            </tr>
+          </table>
+          
+          <br>
 
-    `; 
+          <table style="width: 100%" >
+            <tr>
+              <td colspan="5" style="border-top: 1px solid black; border-bottom: none;">A completar por los profesionales:</td>
+            </tr>
+            <tr>
+              <td style="border: none;">Peso:</td>
+              <td style="border: none;">Altura:</td>
+              <td style="border: none;">P.A.:</td>
+              <td style="border: none;">Temperatura:</td>
+              <td style="border: none;">Horario:</td>
+            </tr>
+          </table>
+
+          <br>
+
+          <table style="width: 100%">
+            <tr>
+              <td colspan="2" style="border: none;">A completar por lo profesionales :</td>
+            </tr>
+            <tr>
+              <td ">Observaiones/Reenvio : ________________________________________________________________
+                ___________________________________________________________________________________
+                ___________________________________________________________________________________
+                <br>
+                </td>
+            </tr>
+            
+            <tr>
+              <td>Procedimineto: _______________________________________________________________________
+                ___________________________________________________________________________________
+                ___________________________________________________________________________________
+                ___________________________________________________________________________________
+                ___________________________________________________________________________________
+                ___________________________________________________________________________________
+                ___________________________________________________________________________________
+                ___________________________________________________________________________________</td>
+            </tr>
+            
+          </table>
+
+          <br>
+          <table style="width: 100%">
+            <tr>
+              <td><br><br><br>Res. Area 1</td>
+              <td><br><br><br>Res. Area 2</td>
+              <td><br><br><br>Res. Area 3</td>
+            </tr>
+            <tr>
+              <td><br><br><br>Res. Area 4</td>
+              <td><br><br><br>Res. Area 5</td>
+              <td><br><br><br>Res. Area 6</td>
+            </tr>
+          </table>
+        </body>
+      </html>
+
+    `;
     const options = {
-        format: 'Letter',
-        timeout: 30000,
-        border: {
-            top: '0.3in',    // Margen superior
-            right: '0.5in', // Margen derecho
-            bottom: '1in',  // Margen inferior
-            left: '0.5in'   // Margen izquierdo
-        }
+      format: "Letter",
+      timeout: 30000,
+      border: {
+        top: "0.3in", // Margen superior
+        right: "0.5in", // Margen derecho
+        bottom: "1in", // Margen inferior
+        left: "0.5in", // Margen izquierdo
+      },
     };
-    pdf.create(htmlContent,options).toStream((err, stream) => {
-        if (err) {
+    pdf.create(htmlContent, options).toStream((err, stream) => {
+      if (err) {
         console.error(err);
         res.status(500).send("Error al generar el PDF");
         return;
-        }
+      }
 
-        res.writeHead(200, {
+      res.writeHead(200, {
         "Content-Type": "application/pdf",
-        "Content-Disposition": "attachment; filename=invoice.pdf",
-        });
-        stream.pipe(res);
+        "Content-Disposition": `attachment; filename=${
+          patient.personalInformation.name +
+          "-" +
+          patient.personalInformation.numberIdentification
+        }.pdf`,
+      });
+      stream.pipe(res);
     });
+  } catch (error) {
+    console.error("waiting error :" + error);
+    res.status(500).json({
+      message: "waiting error :" + error,
+    });
+  }
 };
