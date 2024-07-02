@@ -62,7 +62,7 @@ const locationSchema = new mongoose.Schema({
 });
 
 const specialtySchema = new mongoose.Schema({
-  specialty: {
+  label: {
     type: String,
     required: true,
   },

@@ -69,7 +69,7 @@ const router = Router();
  *                          items:
  *                              type: object
  *                              properties:
- *                                  specialty:
+ *                                  label:
  *                                      type: string
  *                                      description: especialidad médica
  *                                  value:
@@ -117,9 +117,9 @@ const router = Router();
  *              cita:
  *                  appointmentDate: 2024-06-20
  *                  specialties: 
- *                      - specialty: Cardiologia
+ *                      - label: Cardiologia
  *                        value: "1"
- *                      - specialty: Endocrinologia
+ *                      - label: Endocrinologia
  *                        value: "3"
  *                  appointmentDetail: Consulta general
  *              question:
