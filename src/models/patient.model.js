@@ -105,9 +105,8 @@ const testPatientSchema = new mongoose.Schema(
     estate: {
       type: String,
     },
-    serialnumber:{
+    numberFile:{
       type: Number,
-      default: 0,
     }
   },
   {

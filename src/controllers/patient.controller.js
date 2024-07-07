@@ -115,6 +115,9 @@ export const createPatient = async (req, res) => {
       spiritualSupport: spiritualSupport || false,
       futureActivities: futureActivities || false,
     };
+    
+    //sumo el total de pacientes + 1 para asignarle un lugar entre los demas docuemntos
+    const countPatient = await TestPatient.countDocuments();
 
     const newPatient = new TestPatient({
       personalInformation,
@@ -122,7 +125,9 @@ export const createPatient = async (req, res) => {
       cita,
       question,
       estate,
+      numberFile : countPatient + 1
     });
+    
     const savePatienr = await newPatient.save();
     let formatPatient = savePatienr.toObject();
     formatPatient.personalInformation.birthDate = birthDate;
@@ -262,7 +267,7 @@ export const generatePDF = async (req, res) => {
             </tr>
             <tr>
               <td>Ficha</td>
-              <td>[N ficha]</td>
+              <td>${patient.numberFile}</td>
             </tr>
             <tr>
               <td>Registro</td>
@@ -314,14 +319,14 @@ export const generatePDF = async (req, res) => {
             <tr>
               <td colspan="6">Areas: ${patient.cita.specialties.map(
                 (mySpecialty) => {
-                  return mySpecialty.specialty;
+                  return mySpecialty.label;
                 }
               )}</td>
               
             </tr>
             <tr>
               <td>Ficha:</td>
-              <td>[N° Ficha]</td>
+              <td>${patient.numberFile}</td>
               <td>Fecha:</td>
               <td>${getCurrentDateTime()}</td>
               <td>Cert. médico:</td>
