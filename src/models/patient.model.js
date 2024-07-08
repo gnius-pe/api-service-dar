@@ -62,7 +62,7 @@ const locationSchema = new mongoose.Schema({
 });
 
 const specialtySchema = new mongoose.Schema({
-  specialty: {
+  label: {
     type: String,
     required: true,
   },
@@ -105,6 +105,9 @@ const testPatientSchema = new mongoose.Schema(
     estate: {
       type: String,
     },
+    numberFile:{
+      type: Number,
+    }
   },
   {
     timestamps: true,
