@@ -3,6 +3,30 @@ import TestPatient from "../models/patient.model.js";
 import { parseStandardDate, parseStandardClient } from "../libs/validations.js";
 import { calculateAge, getCurrentDateTime, parseDate } from "../libs/utils.js";
 import pdf from "html-pdf";
+import puppeteer from "puppeteer";
+
+export const getDNIDuplicate = async (req, res) =>{
+  console.log(req.params.dni)
+  try {
+    const estateDNI = await TestPatient.findOne({"personalInformation.numberIdentification" : req.params.dni});
+    
+    if (estateDNI) {
+      res.status(200).json({
+        state: true
+      });
+    } else {
+      res.status(404).json({
+        state: false
+      });
+    }
+  } catch (error) {
+    console.error("waiting error :" + error);
+    res.status(500).json({
+      message: "waiting error :" + error,
+    });
+  }
+  
+}
 
 export const getPatients = async (req, res) => {
   const option = {
@@ -414,6 +438,27 @@ export const generatePDF = async (req, res) => {
       </html>
 
     `;
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(htmlContent, { waitUntil: 'networkidle0', timeout: 60000 });
+    const pdfBuffer = await page.pdf({
+      format: 'Letter',
+      margin: {
+        top: '0.3in',
+        right: '0.5in',
+        bottom: '1in',
+        left: '0.5in',
+      },
+    });
+
+    await browser.close();
+    res.writeHead(200,{
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename=${patient.personalInformation.name}-${patient.personalInformation.numberIdentification}.pdf`,
+      'Content-Length': pdfBuffer.length,
+    });
+    res.end(pdfBuffer);
+    /** 
     const options = {
       format: "Letter",
       timeout: 30000,
@@ -440,7 +485,8 @@ export const generatePDF = async (req, res) => {
         }.pdf`,
       });
       stream.pipe(res);
-    });
+    });¨
+    */
   } catch (error) {
     console.error("waiting error :" + error);
     res.status(500).json({

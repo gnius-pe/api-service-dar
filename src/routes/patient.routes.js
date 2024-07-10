@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authRequired } from "../middlewares/validateToken.js";
-import {getPatients,createPatient,getPatient,updatePatient,deletePatient,generatePDF} from "../controllers/patient.controller.js"
+import {getPatients,createPatient,getPatient,updatePatient,deletePatient,generatePDF, getDNIDuplicate} from "../controllers/patient.controller.js"
 import { validateschema } from "../middlewares/validator.middleware.js";
 import {patientSchema} from "../schemas/patient.schema.js";
 
@@ -155,6 +155,9 @@ const router = Router();
  */
 router.get('/patients',getPatients);
 
+
+
+
 /**
  * @swagger
  * /api/patient/{id}:
@@ -243,23 +246,24 @@ router.delete('/patient/:id',deletePatient);
 router.put('/patient/:id',updatePatient);
 //router.put('/patient/:id',authRequired,updatePatient);
 
+
 /**
  * @swagger
- * /api/patient-pdf/{id}:
+ * /api/dni/{dni}:
  *  get:
- *      summary: Obtiener pdf
+ *      summary: Obtienes un paciente
  *      tags:
  *       - Paciente
  *      parameters:
  *          -   in: path
- *              name: id
+ *              name: dni
  *              schema:
  *              type: string
  *              required: true
- *              description: id del paciente
+ *              description: dni del paciente
  *      responses:
  *          200:
- *              description: obtienes un pdf
+ *              description: true si se encuentra el paciente
  */
-router.get('/patient-pdf/:id',generatePDF);
+router.get('/dni/:dni',getDNIDuplicate);
 export default router;

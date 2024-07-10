@@ -14,6 +14,7 @@ const personalInformationSchema = new mongoose.Schema({
   },
   numberIdentification: {
     type: String,
+    unique:true
   },
   email: {
     type: String,
