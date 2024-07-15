@@ -9,3 +9,4 @@ export const PORT_SERVICE = process.env.PORT || 3000;
 export const CLIENT_URL = process.env.CLIENT_URL;
 export const DEV_URL = process.env.DEV_URL;
 export const CLIENT_URL_DAR = process.env.CLIENT_URL_DAR;
+export const CLIENT_CONTAINER = process.env.CLIENT_CONTAINER;

@@ -28,11 +28,19 @@ export const getDNIDuplicate = async (req, res) =>{
   
 }
 
+export const spacesAvailable = async (req,res) => {
+  
+  
+}
+
 export const getPatients = async (req, res) => {
   const option = {
     page: req.query.page || 1,
     limit: req.query.limit || 10,
   };
+
+  const countPatientWait = await TestPatient.countDocuments({estate : "programada"})
+  console.log("cantidad de comfirmados :" + countPatientWait);
 
   try {
     const patients = await TestPatient.paginate({}, option);
