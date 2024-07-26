@@ -192,72 +192,84 @@ export const deletePatient = async (req, res) => {
 };
 
 export const updatePatient = async (req, res) => {
-  const {
-    personalInformation: {
-      name,
-      lastName,
-      numberIdentification,
-      email,
-      firtsNumberPhone,
-      secondNumberPhone,
-      sexo,
-      birthDate,
-    },
-    location: { department, province, district, reference },
-    cita: { appointmentDate, specialty, appointmentDetail },
-    question: { questionExamRecent, spiritualSupport, futureActivities },
-    estate,
-  } = req.body;
-  const hour = "00:00:00";
-  const personalInformation = {
-    name: name,
-    lastName: lastName,
-    numberIdentification: numberIdentification,
-    email: email,
-    firtsNumberPhone: firtsNumberPhone,
-    secondNumberPhone: secondNumberPhone || "",
-    sexo: sexo,
-    birthDate: parseStandardDate(birthDate, hour),
-  };
+  try {
+    const {
+      personalInformation: {
+        name,
+        lastName,
+        numberIdentification,
+        email,
+        firtsNumberPhone,
+        secondNumberPhone,
+        sexo,
+        birthDate,
+      },
+      location: { department, province, district, reference },
+      cita: { appointmentDate, specialties, appointmentDetail },
+      question: { questionExamRecent, spiritualSupport, futureActivities },
+      estate,
+    } = req.body;
 
-  const location = {
-    department: department,
-    province: province,
-    district: district,
-    reference: reference,
-  };
+    const hour = "00:00:00";
+    const personalInformation = {
+      name: name,
+      lastName: lastName,
+      numberIdentification: numberIdentification,
+      email: email,
+      firtsNumberPhone: firtsNumberPhone,
+      secondNumberPhone: secondNumberPhone || "",
+      sexo: sexo,
+      birthDate: birthDate,
+    };
 
-  const cita = {
-    appointmentDate: parseStandardDate(appointmentDate, hour),
-    specialty: specialty,
-    appointmentDetail: appointmentDetail,
-  };
+    const location = {
+      department: department,
+      province: province,
+      district: district,
+      reference: reference,
+    };
 
-  const question = {
-    questionExamRecent: questionExamRecent || false,
-    spiritualSupport: spiritualSupport || false,
-    futureActivities: futureActivities || false,
-  };
-  const patient = await TestPatient.findByIdAndUpdate(
-    req.params.id,
-    {
-      personalInformation,
-      location,
-      cita,
-      question,
-    },
-    {
-      new: true,
-    }
-  );
-  if (!patient)
-    return res.status(404).json({
-      message: "Paciente no found",
+    const cita = {
+      appointmentDate: appointmentDate,
+      specialties: specialties || [],
+      appointmentDetail: appointmentDetail,
+    };
+
+    const question = {
+      questionExamRecent: questionExamRecent || false,
+      spiritualSupport: spiritualSupport || false,
+      futureActivities: futureActivities || false,
+    };
+
+    const patient = await TestPatient.findByIdAndUpdate(
+      req.params.id,
+      {
+        personalInformation,
+        location,
+        cita,
+        question,
+        estate
+      },
+      {
+        new: true,
+      }
+    );
+
+    if (!patient)
+      return res.status(404).json({
+        message: "Patient not found",
+      });
+
+    let formatPatient = patient.toObject();
+    formatPatient.personalInformation.birthDate = birthDate;
+    formatPatient.cita.appointmentDate = appointmentDate;
+    res.json(formatPatient);
+  } catch (error) {
+    console.error("Error updating patient: " + error);
+    res.status(500).json({
+      message: "Error updating patient: " + error,
     });
-  let formatPatient = patient.toObject();
-  formatPatient.personalInformation.birthDate = birthDate;
-  formatPatient.cita.appointmentDate = appointmentDate;
-  res.json(formatPatient);
+  }
 };
 
 export const generatePDF = async (req, res) => {
