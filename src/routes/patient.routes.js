@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { authRequired } from "../middlewares/validateToken.js";
-import {getPatients,createPatient,getPatient,updatePatient,deletePatient,generatePDF, getDNIDuplicate} from "../controllers/patient.controller.js"
+import {getPatients,createPatient,getPatient,updatePatient,deletePatient, getDNIDuplicate} from "../controllers/patient.controller.js"
 import { validateschema } from "../middlewares/validator.middleware.js";
 import {patientSchema} from "../schemas/patient.schema.js";
 
