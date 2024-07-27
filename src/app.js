@@ -7,6 +7,7 @@ import verifiNumberRouter from "./routes/verifyNumber.routes.js";
 import misionRouter from "./routes/mision.routes.js";
 import userRouter from "./routes/userManagement.routes.js";
 import specialtyRouter from "./routes/specialty.routes.js";
+import reportByDashboard from "./routes/reportByDashboard.routes.js";
 import cors from "cors";
 import { CLIENT_URL, DEV_URL, CLIENT_URL_DAR , CLIENT_CONTAINER} from './config.js';
 
@@ -25,5 +26,6 @@ app.use('/api/v1',verifiNumberRouter);
 app.use('/api',misionRouter);
 app.use('/api',userRouter);
 app.use('/api',specialtyRouter);
+app.use('/api',reportByDashboard);
 
 export default app;
