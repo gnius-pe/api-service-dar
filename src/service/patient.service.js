@@ -2,6 +2,30 @@ import TestPatient from "../models/patient.model.js";
 import { parseStandardClient } from "../libs/validations.js";
 import { calculateAge } from "../libs/utils.js";
 import SpecialtyModel from "../models/specialty.model.js";
+
+export const deletePatientservice = async (id) => {
+    try {
+      const patient = await TestPatient.findByIdAndDelete(id);
+      if (!patient) {
+        throw new Error("Patient not found");
+      }
+      return { message: "Patient deleted" };
+    } catch (error) {
+      console.error("Error deleting patient:", error);
+      throw new Error("Error deleting patient: " + error.message);
+    }
+};
+
+export const checkDNIDuplicateService = async (dni) => {
+    try {
+      const estateDNI = await TestPatient.findOne({"personalInformation.numberIdentification": dni});
+      return estateDNI ? true : false;
+    } catch (error) {
+      console.error("Error checking DNI duplication:", error);
+      throw new Error("Error checking DNI duplication: " + error.message);
+    }
+};
+
 export const getPatientsService = async (page, limit) => {
     const option = {
       page: page || 1,
@@ -142,5 +166,83 @@ export const createPatientService = async (patientData) => {
     } catch (error) {
       console.error("Error al guardar:", error);
       throw new Error("Error al guardar: " + error.message);
+    }
+};
+
+export const updatePatientService = async (id, patientData) => {
+    try {
+      const {
+        personalInformation: {
+          name,
+          lastName,
+          numberIdentification,
+          email,
+          firtsNumberPhone,
+          secondNumberPhone,
+          sexo,
+          birthDate,
+        },
+        location: { department, province, district, reference },
+        cita: { appointmentDate, specialties, appointmentDetail },
+        question: { questionExamRecent, spiritualSupport, futureActivities },
+        estate,
+      } = patientData;
+  
+      const personalInformation = {
+        name,
+        lastName,
+        numberIdentification,
+        email,
+        firtsNumberPhone,
+        secondNumberPhone: secondNumberPhone || "",
+        sexo,
+        birthDate,
+      };
+  
+      const location = {
+        department,
+        province,
+        district,
+        reference,
+      };
+  
+      const cita = {
+        appointmentDate,
+        specialties: specialties || [],
+        appointmentDetail,
+      };
+  
+      const question = {
+        questionExamRecent: questionExamRecent || false,
+        spiritualSupport: spiritualSupport || false,
+        futureActivities: futureActivities || false,
+      };
+  
+      const patient = await TestPatient.findByIdAndUpdate(
+        id,
+        {
+          personalInformation,
+          location,
+          cita,
+          question,
+          estate
+        },
+        {
+          new: true,
+        }
+      );
+  
+      if (!patient) {
+        throw new Error("Patient not found");
+      }
+  
+      let formatPatient = patient.toObject();
+      formatPatient.personalInformation.birthDate = birthDate;
+      formatPatient.cita.appointmentDate = appointmentDate;
+  
+      return formatPatient;
+    } catch (error) {
+      console.error("Error updating patient:", error);
+      throw new Error("Error updating patient: " + error.message);
     }
 };

@@ -1,26 +1,27 @@
-import { json } from "express";
-import TestPatient from "../models/patient.model.js";
-import { parseStandardDate, parseStandardClient } from "../libs/validations.js";
-import { calculateAge, getCurrentDateTime, parseDate } from "../libs/utils.js";
-import SpecialtyModel from "../models/specialty.model.js";
-import { getPatientsService, getPatientByIdService, createPatientService } from "../service/patient.service.js";
 import httpResponses from "../utils/httpResponses.js";
+import { 
+  getPatientsService,
+  getPatientByIdService, 
+  createPatientService, 
+  updatePatientService,
+  checkDNIDuplicateService,
+  deletePatientservice } from "../service/patient.service.js";
 
 export const getDNIDuplicate = async (req, res) =>{
   try {
-    const estateDNI = await TestPatient.findOne({"personalInformation.numberIdentification" : req.params.dni});
-    if (estateDNI) {
-      res.status(200).json({
-        state: true
+    const isDuplicate = await checkDNIDuplicateService(req.params.dni);
+    if(isDuplicate){
+      res.status(httpResponses.OK.status).json({
+        state : true
       });
-    } else {
-      res.status(404).json({
-        state: false
-      });
+    }else{
+      res.status(httpResponses.NOT_FOUND.status).json({
+        state : false
+      })
     }
   } catch (error) {
     console.error("waiting error :" + error);
-    res.status(500).json({
+    res.status(httpResponses.INTERNAL_SERVER_ERROR.status).json({
       message: "waiting error :" + error,
     });
   }
@@ -68,98 +69,24 @@ export const getPatient = async (req, res) => {
 
 export const deletePatient = async (req, res) => {
   try {
-    const patient = await TestPatient.findByIdAndDelete(req.params.id);
-    console.log(req.params.id);
-    if (!patient)
-      return res.status(404).json({
-        message: "Paciente no found",
-      });
-    res.status(200).json({ message: "eliminated patient" });
+    const result = await deletePatientservice(req.params.id);
+    res.status(httpResponses.OK.status).json(result);
   } catch (error) {
-    console.error("waiting error :" + error);
-    res.status(500).json({
-      message: "waiting error :" + error,
+    console.error("Error deleting patient:", error);
+    res.status(httpResponses.INTERNAL_SERVER_ERROR.status).json({
+      message: "Error deleting patient: " + error.message,
     });
   }
 };
 
 export const updatePatient = async (req, res) => {
   try {
-    const {
-      personalInformation: {
-        name,
-        lastName,
-        numberIdentification,
-        email,
-        firtsNumberPhone,
-        secondNumberPhone,
-        sexo,
-        birthDate,
-      },
-      location: { department, province, district, reference },
-      cita: { appointmentDate, specialties, appointmentDetail },
-      question: { questionExamRecent, spiritualSupport, futureActivities },
-      estate,
-    } = req.body;
-
-    const hour = "00:00:00";
-    const personalInformation = {
-      name: name,
-      lastName: lastName,
-      numberIdentification: numberIdentification,
-      email: email,
-      firtsNumberPhone: firtsNumberPhone,
-      secondNumberPhone: secondNumberPhone || "",
-      sexo: sexo,
-      birthDate: birthDate,
-    };
-
-    const location = {
-      department: department,
-      province: province,
-      district: district,
-      reference: reference,
-    };
-
-    const cita = {
-      appointmentDate: appointmentDate,
-      specialties: specialties || [],
-      appointmentDetail: appointmentDetail,
-    };
-
-    const question = {
-      questionExamRecent: questionExamRecent || false,
-      spiritualSupport: spiritualSupport || false,
-      futureActivities: futureActivities || false,
-    };
-
-    const patient = await TestPatient.findByIdAndUpdate(
-      req.params.id,
-      {
-        personalInformation,
-        location,
-        cita,
-        question,
-        estate
-      },
-      {
-        new: true,
-      }
-    );
-
-    if (!patient)
-      return res.status(404).json({
-        message: "Patient not found",
-      });
-
-    let formatPatient = patient.toObject();
-    formatPatient.personalInformation.birthDate = birthDate;
-    formatPatient.cita.appointmentDate = appointmentDate;
-    res.json(formatPatient);
+    const updatePatient = await updatePatientService(req.params.id,req.body);
+    res.status(httpResponses.OK.status).json(updatePatient);
   } catch (error) {
     console.error("Error updating patient: " + error);
-    res.status(500).json({
-      message: "Error updating patient: " + error,
+    res.status(httpResponses.INTERNAL_SERVER_ERROR.status).json({
+      message: "Error updating patient: " + error.message,
     });
   }
 };
