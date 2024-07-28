@@ -15,6 +15,11 @@ const specialtySchema = new mongoose.Schema({
         type: String,
         trim: true,
         unique:true
+    },
+    availableSlots: {
+        type: Number,
+        required: true,
+        min: 0
     }
 },{
     timestamps:true,
