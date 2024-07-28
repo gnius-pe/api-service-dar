@@ -3,12 +3,12 @@ import TestPatient from "../models/patient.model.js";
 import { parseStandardDate, parseStandardClient } from "../libs/validations.js";
 import { calculateAge, getCurrentDateTime, parseDate } from "../libs/utils.js";
 import SpecialtyModel from "../models/specialty.model.js";
+import { getPatientsService, getPatientByIdService, createPatientService } from "../service/patient.service.js";
+import httpResponses from "../utils/httpResponses.js";
 
 export const getDNIDuplicate = async (req, res) =>{
-  console.log(req.params.dni)
   try {
     const estateDNI = await TestPatient.findOne({"personalInformation.numberIdentification" : req.params.dni});
-    
     if (estateDNI) {
       res.status(200).json({
         state: true
@@ -24,9 +24,7 @@ export const getDNIDuplicate = async (req, res) =>{
       message: "waiting error :" + error,
     });
   }
-  
 }
-
 
 export const getPatients = async (req, res) => {
   const option = {
@@ -34,154 +32,38 @@ export const getPatients = async (req, res) => {
     limit: req.query.limit || 10,
   };
   try {
-    const patients = await TestPatient.paginate({}, option);
-
-    // Map through the docs and format the dates
-    const formattedDocs = patients.docs.map((patient) => {
-      const patientObjet = patient.toObject();
-      return {
-        ...patientObjet._doc, // Spread the document properties
-        _id: patientObjet._id,
-        personalInformation: {
-          ...patientObjet.personalInformation,
-          birthDate: parseStandardClient(
-            patientObjet.personalInformation.birthDate
-          ),
-          age: calculateAge(patientObjet.personalInformation.birthDate),
-        },
-        location: {
-          ...patientObjet.location,
-        },
-        cita: {
-          ...patientObjet.cita,
-          appointmentDate: parseStandardClient(
-            patientObjet.cita.appointmentDate
-          ),
-        },
-        question: {
-          ...patientObjet.question,
-        },
-        estate: patientObjet.estate,
-      };
-    });
-
-    // Send the modified response
-    res.send({
-      items: {
-        ...patients,
-        docs: formattedDocs, // Replace docs with the formatted documents
-      },
-    });
+    const result = await getPatientsService(option.page,option.limit);
+    res.status(httpResponses.OK.status).json(result);
   } catch (error) {
     console.error("Error fetching patients:", error);
-    res.status(500).json({ message: "Error fetching patients" });
+    res.status(httpResponses.INTERNAL_SERVER_ERROR.status).json(
+      { message: "Error fetching patients" }
+    );
   }
-
-  /** 
-
-    let reqPatients = patients.map(patient=>{
-        let patientObjet = patient.toObject();
-        patientObjet.personalInformation.birthDate = parseStandardClient(patientObjet.personalInformation.birthDate);
-        patientObjet.cita.appointmentDate = parseStandardClient(patientObjet.cita.appointmentDate);
-        return patientObjet;
-    })
-    */
-  //res.json("reqPatients")
 };
 
 export const createPatient = async (req, res) => {
   try {
-    const {
-      personalInformation: {
-        name,
-        lastName,
-        numberIdentification,
-        email,
-        firtsNumberPhone,
-        secondNumberPhone,
-        sexo,
-        birthDate,
-      },
-      location: { department, province, district, reference },
-      cita: { appointmentDate, specialties, appointmentDetail },
-      question: { questionExamRecent, spiritualSupport, futureActivities },
-      estate,
-    } = req.body;
-
-    const hour = "00:00:00";
-    const personalInformation = {
-      name: name,
-      lastName: lastName,
-      numberIdentification: numberIdentification,
-      email: email,
-      firtsNumberPhone: firtsNumberPhone,
-      secondNumberPhone: secondNumberPhone || "",
-      sexo: sexo,
-      birthDate: birthDate,
-    };
-
-    const location = {
-      department: department,
-      province: province,
-      district: district,
-      reference: reference,
-    };
-
-    const cita = {
-      appointmentDate: appointmentDate,
-      specialties: specialties || [],
-      appointmentDetail: appointmentDetail,
-    };
-
-    const question = {
-      questionExamRecent: questionExamRecent || false,
-      spiritualSupport: spiritualSupport || false,
-      futureActivities: futureActivities || false,
-    };
-
-    
-    //sumo el total de pacientes + 1 para asignarle un lugar entre los demas docuemntos
-    const countPatient = await TestPatient.countDocuments();
-
-    const newPatient = new TestPatient({
-      personalInformation,
-      location,
-      cita,
-      question,
-      estate,
-      numberFile : countPatient + 1
-    });
-
-    const savePatienr = await newPatient.save();
-    let formatPatient = savePatienr.toObject();
-    formatPatient.personalInformation.birthDate = birthDate;
-    formatPatient.cita.appointmentDate = appointmentDate;
-    for( const {label : specialtyName } of specialties) { 
-      const specialty = await SpecialtyModel.findOne({specialtyName});
-      if(specialty){
-        specialty.availableSlots = Math.max(specialty.availableSlots - 1,0);
-        await specialty.save();
-        console.log(`Updated ${specialtyName}: new availableSlots = ${specialty.availableSlots}`);
-      }else{
-        console.log(`Specialty ${specialtyName} not found`);
-      }
-    }
-    res.json(formatPatient);
+    const savePatient = await createPatientService(req.body);
+    res.status(httpResponses.CREATED.status).json(savePatient);
   } catch (error) {
-    console.error("Error al guardar :" + error);
-    res.status(500).json({
-      message: "Error al guardar :" + error,
+    console.error("Error fetching patient:", error);
+    res.status(httpResponses.INTERNAL_SERVER_ERROR.status).json({
+      message: "Error fetching patient :" + error,
     });
   }
 };
 
 export const getPatient = async (req, res) => {
-  const patient = await TestPatient.findById(req.params.id);
-  if (!patient)
-    return res.status(404).json({
-      message: "Paciente no found",
+  try {
+    const patient = await getPatientByIdService(req.params.id);
+    res.status(httpResponses.OK.status).json(patient);
+  } catch (error) {
+    console.error("Error saving patient:", error);
+    res.status(httpResponses.INTERNAL_SERVER_ERROR.status).json({
+      message: "Error saving patient :" + error,
     });
-  res.json(patient);
+  }
 };
 
 export const deletePatient = async (req, res) => {
