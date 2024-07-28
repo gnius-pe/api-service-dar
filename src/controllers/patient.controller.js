@@ -2,6 +2,7 @@ import { json } from "express";
 import TestPatient from "../models/patient.model.js";
 import { parseStandardDate, parseStandardClient } from "../libs/validations.js";
 import { calculateAge, getCurrentDateTime, parseDate } from "../libs/utils.js";
+import SpecialtyModel from "../models/specialty.model.js";
 
 export const getDNIDuplicate = async (req, res) =>{
   console.log(req.params.dni)
@@ -137,6 +138,7 @@ export const createPatient = async (req, res) => {
       spiritualSupport: spiritualSupport || false,
       futureActivities: futureActivities || false,
     };
+
     
     //sumo el total de pacientes + 1 para asignarle un lugar entre los demas docuemntos
     const countPatient = await TestPatient.countDocuments();
@@ -149,11 +151,21 @@ export const createPatient = async (req, res) => {
       estate,
       numberFile : countPatient + 1
     });
-    
+
     const savePatienr = await newPatient.save();
     let formatPatient = savePatienr.toObject();
     formatPatient.personalInformation.birthDate = birthDate;
     formatPatient.cita.appointmentDate = appointmentDate;
+    for( const {label : specialtyName } of specialties) { 
+      const specialty = await SpecialtyModel.findOne({specialtyName});
+      if(specialty){
+        specialty.availableSlots = Math.max(specialty.availableSlots - 1,0);
+        await specialty.save();
+        console.log(`Updated ${specialtyName}: new availableSlots = ${specialty.availableSlots}`);
+      }else{
+        console.log(`Specialty ${specialtyName} not found`);
+      }
+    }
     res.json(formatPatient);
   } catch (error) {
     console.error("Error al guardar :" + error);
