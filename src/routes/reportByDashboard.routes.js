@@ -3,7 +3,7 @@ import {quotasBySpecialty} from "../controllers/reportBySpecialty.controller.js"
 
 const router = Router();
 
-router.get('/report/:nameSpecialty', quotasBySpecialty);
+router.get('/report/specialty', quotasBySpecialty);
 
 
 export default router;

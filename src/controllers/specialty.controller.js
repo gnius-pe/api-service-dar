@@ -2,11 +2,12 @@ import SpecialtyModel from "../models/specialty.model.js";
 
 export const createSpecialty = async (req,res) => {
     try {
-        const {specialtyName, description, code} = req.body;
+        const {specialtyName, description, code, availableSlots} = req.body;
         const newSpecialty = new SpecialtyModel({
             specialtyName, 
             description, 
-            code
+            code,
+            availableSlots
         });
         const saveSpecialty = await newSpecialty.save();
         res.status(200).json(saveSpecialty); 
