@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {quotasBySpecialty} from "../controllers/reportBySpecialty.controller.js";
+import {quotasBySpecialty, countReport} from "../controllers/reportBySpecialty.controller.js";
 
 const router = Router();
 
@@ -15,6 +15,19 @@ const router = Router();
  *              description: Listado de especialidades
  */
 router.get('/report/specialty', quotasBySpecialty);
+
+/**
+ * @swagger
+ * /api/report/count:
+ *  get:
+ *      summary: Obtienes numero de cupos, total de inscritos y niños inscritos
+ *      tags:
+ *       - Report
+ *      responses:
+ *          200:
+ *              description: respuesta al detalle
+ */
+router.get('/report/count', countReport);
 
 
 export default router;
