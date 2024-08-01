@@ -29,9 +29,19 @@ export const getSpecialty = async (req,res) => {
     } catch (error) {
         console.log(error.message)
         res.status(400).json({"error" : error.message})
-    }
-    
+    } 
 }
+
+export const getSpecialtiesAvailableSlot = async (req, res) => {
+    try {
+        // Encuentra todas las especialidades con availableSlots mayor que 0
+        const specialties = await SpecialtyModel.find({ availableSlots: { $gt: 0 } })
+        res.status(200).json(specialties);
+    } catch (error) {
+        console.error(error.message);
+        res.status(400).json({ "error": error.message });
+    }
+};
 
 export const getSpecialties = async (req,res) => {
     try {
