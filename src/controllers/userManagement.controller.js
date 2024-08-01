@@ -29,7 +29,7 @@ export const createUser = async (req,res) => {
             sexo,
             username : name + numberIdentification, 
             email,
-            organizationEmail : firtsName+"."+fitsLastName+"@DAR.or", 
+            organizationEmail : firtsName+"."+fitsLastName+"@dar.com", 
             password: pasdwordHash, 
             role, 
             specialty
