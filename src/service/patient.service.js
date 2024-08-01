@@ -133,13 +133,6 @@ export const createPatientService = async (patientData) => {
         spiritualSupport: spiritualSupport || false,
         futureActivities: futureActivities || false,
       };
-
-      for (const { label: specialtyName } of specialties) {
-        const specialty = await SpecialtyModel.findOne({ specialtyName });
-        if (!specialty || specialty.availableSlots <= 0) {
-          throw new Error(`No hay cupos disponibles para la especialidad: ${specialtyName}`);
-        }
-      }
   
       // Sumo el total de pacientes + 1 para asignarle un lugar entre los demás documentos
       const countPatient = await TestPatient.countDocuments();
