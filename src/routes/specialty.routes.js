@@ -4,7 +4,8 @@ import {
     getSpecialties, 
     deletetSpecialty, 
     updateSpecialty, 
-    getSpecialty 
+    getSpecialty,
+    getSpecialtiesAvailableSlot
 } from "../controllers/specialty.controller.js";
 
 const router = Router();
@@ -76,6 +77,20 @@ router.get('/specialty', getSpecialties);
 
 /**
  * @swagger
+ * /api/specialty-available:
+ *  get:
+ *      summary: Obtiene todas las especialidades disponibles
+ *      tags:
+ *       - Specialty
+ *      responses:
+ *          200:
+ *              description: Listado de especialidades disponibles
+ */
+router.get('/specialty-available',getSpecialtiesAvailableSlot);
+
+
+/**
+ * @swagger
  * /api/specialty:
  *  post:
  *      summary: Crea una nueva especialidad
@@ -142,6 +157,8 @@ router.put('/specialty/:id', updateSpecialty);
  *              description: Especialidad eliminada
  */
 router.delete('/specialty/:id', deletetSpecialty);
+
+
 
 
 export default router;
