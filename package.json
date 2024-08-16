@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --coverage"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +30,13 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.2",
+    "babel-jest": "^29.7.0",
+    "cross-env": "^7.0.3",
+    "jest": "^29.7.0",
+    "mongodb-memory-server": "^10.0.0",
+    "nodemon": "^3.0.1",
+    "supertest": "^7.0.0"
   }
 }

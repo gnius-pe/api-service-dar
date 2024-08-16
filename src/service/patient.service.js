@@ -17,13 +17,13 @@ export const deletePatientservice = async (id) => {
 };
 
 export const checkDNIDuplicateService = async (dni) => {
-    try {
-      const estateDNI = await TestPatient.findOne({"personalInformation.numberIdentification": dni});
-      return estateDNI ? true : false;
-    } catch (error) {
-      console.error("Error checking DNI duplication:", error);
-      throw new Error("Error checking DNI duplication: " + error.message);
-    }
+  try {
+    const estateDNI = await TestPatient.findOne({"personalInformation.numberIdentification": dni});
+    return estateDNI ? true : false;
+  } catch (error) {
+    console.error("Error checking DNI duplication:", error);
+    throw error; // Lanzamos el error original en lugar de crear uno nuevo
+  }
 };
 
 export const getPatientsService = async (page, limit) => {

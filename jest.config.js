@@ -1,0 +1,16 @@
+export default {
+    transform: {
+      '^.+\\.js$': 'babel-jest',
+    },
+    testEnvironment: 'node',
+  
+    collectCoverage: true, // Asegúrate de que la cobertura esté habilitada
+    collectCoverageFrom: [
+      "src/controllers/**/*.js" // Aquí indicamos que solo recoja cobertura de la carpeta controllers
+    ],
+    coverageDirectory: 'coverage',
+    moduleNameMapper: {
+        '^(\\.{1,2}/.*)\\.js$': '$1',
+      },
+  };
+  
