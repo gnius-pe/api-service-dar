@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon index.js",
-    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest --silent --verbose --coverage"
+    "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest  --coverage"
   },
   "keywords": [],
   "author": "",
