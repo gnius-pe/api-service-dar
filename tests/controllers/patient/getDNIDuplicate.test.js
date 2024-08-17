@@ -1,37 +1,10 @@
-import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
 import request from 'supertest';
-import app from '../../src/app.js';
-import TestPatient from '../../src/models/patient.model.js';
-import httpResponses from '../../src/utils/httpResponses.js';
+import app from '../../../src/app.js';
+import TestPatient from '../../../src/models/patient.model.js';
+import httpResponses from '../../../src/utils/httpResponses.js';
+import { setupTestDB } from '../../config/testSetup.js';
 
-let mongoServer;
-
-afterEach(async () => {
-    if (mongoose.connection.readyState === 1) {
-      await TestPatient.deleteMany({}); // Asegúrate de que MongoDB esté conectado antes de realizar operaciones
-    }
-  });
-
-beforeAll(async () => {
-    mongoServer = await MongoMemoryServer.create();
-    const uri = mongoServer.getUri();
-    await mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-  });
-
-afterAll(async () => {
-  await mongoose.disconnect();
-  await mongoServer.stop();
-});
-
-afterEach(async () => {
-  if (mongoose.connection.readyState === 1) {
-    await TestPatient.deleteMany({}); // Limpia la base de datos entre pruebas
-  }
-});
+setupTestDB();
 
 describe('Patient Controller - getDNIDuplicate', () => {
 
@@ -71,16 +44,13 @@ describe('Patient Controller - getDNIDuplicate', () => {
     });
 
     const res = await request(app).get('/api/dni/12345678');
-
     expect(res.statusCode).toBe(httpResponses.OK.status);
     expect(res.body.state).toBe(true);
   });
 
   it('should return false if DNI is not a duplicate', async () => {
     const res = await request(app).get('/api/dni/87654321');
-
     expect(res.statusCode).toBe(httpResponses.NOT_FOUND.status);
     expect(res.body.state).toBe(false);
   });
-
 });
