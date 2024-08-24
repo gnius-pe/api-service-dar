@@ -11,7 +11,7 @@ export const deletePatientservice = async (id) => {
       }
       return { message: "Patient deleted" };
     } catch (error) {
-      console.error("Error deleting patient:", error);
+      //console.error("Error deleting patient:", error);
       throw new Error("Error deleting patient: " + error.message);
     }
 };
@@ -21,7 +21,7 @@ export const checkDNIDuplicateService = async (dni) => {
     const estateDNI = await TestPatient.findOne({"personalInformation.numberIdentification": dni});
     return estateDNI ? true : false;
   } catch (error) {
-    console.error("Error checking DNI duplication:", error);
+    //console.error("Error checking DNI duplication:", error);
     throw error; // Lanzamos el error original en lugar de crear uno nuevo
   }
 };
@@ -158,15 +158,13 @@ export const createPatientService = async (patientData) => {
         if (specialty) {
           specialty.availableSlots = Math.max(specialty.availableSlots - 1, 0);
           await specialty.save();
-          console.log(`Updated ${specialtyName}: new availableSlots = ${specialty.availableSlots}`);
-        } else {
-          console.log(`Specialty ${specialtyName} not found`);
+          //console.log(`Updated ${specialtyName}: new availableSlots = ${specialty.availableSlots}`);
         }
       }
   
       return formattedPatient;
     } catch (error) {
-      console.error("Error al guardar:", error);
+      //console.error("Error al guardar:", error);
       throw new Error("Error al guardar: " + error.message);
     }
 };
@@ -244,7 +242,7 @@ export const updatePatientService = async (id, patientData) => {
   
       return formatPatient;
     } catch (error) {
-      console.error("Error updating patient:", error);
+      //console.error("Error updating patient:", error);
       throw new Error("Error updating patient: " + error.message);
     }
 };

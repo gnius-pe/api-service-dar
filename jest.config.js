@@ -3,10 +3,9 @@ export default {
       '^.+\\.js$': 'babel-jest',
     },
     testEnvironment: 'node',
-  
     collectCoverage: true, // Asegúrate de que la cobertura esté habilitada
     collectCoverageFrom: [
-      "src/controllers/**/*.js" // Aquí indicamos que solo recoja cobertura de la carpeta controllers
+      "src/service/**/*.js" // Aquí indicamos que solo recoja cobertura de la carpeta controllers
     ],
     coverageDirectory: 'coverage',
     moduleNameMapper: {
@@ -20,5 +19,6 @@ export default {
         "expand": true
       }]
     ],
+    verbose: true,
   };
   
