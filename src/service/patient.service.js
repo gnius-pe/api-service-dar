@@ -66,7 +66,7 @@ export const getPatientsService = async (page, limit) => {
         },
       };
     } catch (error) {
-      console.error("Error fetching patients:", error);
+      //console.error("Error fetching patients:", error);
       throw new Error("Error fetching patients");
     }
 };
