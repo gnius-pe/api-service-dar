@@ -79,7 +79,7 @@ export const getPatientByIdService = async (id) => {
       }
       return patient;
     } catch (error) {
-      console.error("Error fetching patient:", error);
+      //console.error("Error fetching patient:", error);
       throw error;
     }
 };
