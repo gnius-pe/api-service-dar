@@ -1,7 +1,5 @@
-import bvrypt from "bcryptjs";
 import UserModel from "../models/user.model.js"
-import {parseStandardClient} from "../libs/validations.js";
-import { createUserService } from "../service/userManagement.service.js";
+import { createUserService, getAllUsersService, updateUserService } from "../service/userManagement.service.js";
 import httpResponses from "../utils/httpResponses.js";
 
 export const createUser = async (req,res) => {
@@ -28,50 +26,27 @@ export const getUser = async (req,res) => {
 };
 
 export const getUserAll = async (req,res) => {
-    /**
-    const userAll = await UserModel.find();
-    res.json(userAll);
-
-
- */
     try {
-        const page = parseInt(req.query.page) || 1; // Página actual, por defecto es 1
-        const limit = parseInt(req.query.limit) || 10;
-        const options = {
-            page: page,
-            limit: limit
-        };
-        const userAll = await UserModel.paginate({}, options);
-        const userAllFormat = userAll.docs.map(user => {
-                const userObj = user.toObject();
-                return{
-                    ...userObj,
-                    birthDate : parseStandardClient(userObj.birthDate)
-                }
-            }
-        );
-    
-        const response = {
-            docs: userAllFormat,
-            totalDocs: userAll.totalDocs,
-            limit: userAll.limit,
-            totalPages: userAll.totalPages,
-            page: userAll.page,
-            pagingCounter: userAll.pagingCounter,
-            hasPrevPage: userAll.hasPrevPage,
-            hasNextPage: userAll.hasNextPage,
-            prevPage: userAll.prevPage,
-            nextPage: userAll.nextPage
-        };
-        res.json(response);
+        const responseUser = await getAllUsersService(req.query);
+        res.status(httpResponses.OK.status).json(responseUser);
     } catch (error) {
-        console.error(error.message);
-        res.status(400).json({ error: error.message });
+        res.status(httpResponses.BAD_REQUEST.status).json(
+            { error: error.message }
+        );
     }
 }
 
 export const updateUser = async (req,res) => {
-    res.json({message : "put user"});
+    try {
+        const userId = req.params.id;
+        const updateData = req.body;
+        const updatedUser = await updateUserService(userId,updateData);
+        res.status(httpResponses.OK.status).json(updatedUser);
+    } catch (error) {
+        res.status(httpResponses.BAD_REQUEST.status).json({
+            message: error.message
+        });
+    }
 };
 
 export const deleteUser = async (req,res) => {

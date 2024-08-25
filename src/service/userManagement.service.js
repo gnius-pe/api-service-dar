@@ -112,7 +112,32 @@ export const getAllUsersService = async (query) => {
 
         return response;
     } catch (error) {
-        console.error("Error fetching users:", error.message);
+        //console.error("Error fetching users:", error.message);
         throw new Error("Error fetching users: " + error.message);
+    }
+};
+
+/**
+ * Servicio para actualizar un usuario.
+ * @param {string} userId - El ID del usuario a actualizar.
+ * @param {Object} updateData - Los datos a actualizar en el usuario.
+ * @returns {Object} - El usuario actualizado.
+ * @throws {Error} - Si ocurre un error durante la actualización o el usuario no es encontrado.
+ */
+export const updateUserService = async (userId, updateData) => {
+    try {
+        const updatedUser = await UserModel.findByIdAndUpdate(userId, updateData, {
+            new: true, // Devuelve el documento modificado en lugar del original
+            runValidators: true // Ejecuta las validaciones del esquema en las actualizaciones
+        });
+
+        if (!updatedUser) {
+            throw new Error("User not found");
+        }
+
+        return updatedUser.toObject();
+    } catch (error) {
+        //console.error("Error updating user:", error.message);
+        throw new Error("Error updating user: " + error.message);
     }
 };
