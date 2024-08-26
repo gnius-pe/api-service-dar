@@ -1,5 +1,5 @@
 import UserModel from "../models/user.model.js"
-import { createUserService, getAllUsersService, updateUserService } from "../service/userManagement.service.js";
+import { createUserService, getAllUsersService, updateUserService,changeUserRoleService } from "../service/userManagement.service.js";
 import httpResponses from "../utils/httpResponses.js";
 
 export const createUser = async (req,res) => {
@@ -51,4 +51,23 @@ export const updateUser = async (req,res) => {
 
 export const deleteUser = async (req,res) => {
     res.json({message : "delete user"});
+};
+
+export const changeUserRolController = async (req,res) =>{
+    try {
+        const userId = req.params.userId;
+        const { role } = req.body;
+        if (!role) {
+            return res.status(httpResponses.BAD_REQUEST.status).json({
+                message: "Role is required"
+            });
+        }
+        const updatedUser = await changeUserRoleService(userId, role);
+
+        res.status(httpResponses.OK.status).json(updatedUser);
+    } catch (error) {
+        res.status(httpResponses.BAD_REQUEST.status).json({
+            message: error.message
+        });
+    }
 };

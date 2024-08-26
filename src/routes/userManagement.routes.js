@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUser, getUser, getUserAll ,updateUser, deleteUser} from "../controllers/userManagement.controller.js";
+import { createUser, getUser, getUserAll ,updateUser, deleteUser,changeUserRolController} from "../controllers/userManagement.controller.js";
 
 const router = Router();
 
@@ -176,5 +176,7 @@ router.get('/user/:id',getUser);
  *              description: usuario eliminado
  */
 router.delete('/user/:id',deleteUser);
+
+router.patch('/role/:userId',changeUserRolController);
 
 export default router;

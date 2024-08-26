@@ -141,3 +141,21 @@ export const updateUserService = async (userId, updateData) => {
         throw new Error("Error updating user: " + error.message);
     }
 };
+
+export const changeUserRoleService = async (userId, newRole) => {
+    try {
+        const updatedUser = await UserModel.findByIdAndUpdate(
+            userId, 
+            { role: newRole }, 
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedUser) {
+            throw new Error("User not found");
+        }
+
+        return updatedUser.toObject();
+    } catch (error) {
+        throw new Error("Error changing user role: " + error.message);
+    }
+};
