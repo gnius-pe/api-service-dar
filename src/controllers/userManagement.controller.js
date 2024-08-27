@@ -1,5 +1,10 @@
 import UserModel from "../models/user.model.js"
-import { createUserService, getAllUsersService, updateUserService,changeUserRoleService } from "../service/userManagement.service.js";
+import {    createUserService, 
+            getAllUsersService, 
+            updateUserService,
+            changeUserRoleService, 
+            deleteUserService 
+        } from "../service/userManagement.service.js";
 import httpResponses from "../utils/httpResponses.js";
 
 export const createUser = async (req,res) => {
@@ -50,7 +55,17 @@ export const updateUser = async (req,res) => {
 };
 
 export const deleteUser = async (req,res) => {
-    res.json({message : "delete user"});
+    try {
+        const userId = req.params.id; // Asumimos que el ID del usuario se pasa en la URL como /users/:id
+
+        const response = await deleteUserService(userId);
+
+        res.status(httpResponses.OK.status).json(response);
+    } catch (error) {
+        res.status(httpResponses.BAD_REQUEST.status).json({
+            message: error.message
+        });
+    }
 };
 
 export const changeUserRolController = async (req,res) =>{

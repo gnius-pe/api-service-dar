@@ -159,3 +159,25 @@ export const changeUserRoleService = async (userId, newRole) => {
         throw new Error("Error changing user role: " + error.message);
     }
 };
+
+
+/**
+ * Servicio para eliminar un usuario por su ID.
+ * @param {string} userId - El ID del usuario a eliminar.
+ * @returns {Object} - Un objeto que indica que el usuario fue eliminado.
+ * @throws {Error} - Si ocurre un error durante la eliminación o el usuario no es encontrado.
+ */
+export const deleteUserService = async (userId) => {
+    try {
+        const deletedUser = await UserModel.findByIdAndDelete(userId);
+
+        if (!deletedUser) {
+            throw new Error("User not found");
+        }
+
+        return { message: "User deleted successfully" };
+    } catch (error) {
+        //console.error("Error deleting user:", error.message);
+        throw new Error("Error deleting user: " + error.message);
+    }
+};
