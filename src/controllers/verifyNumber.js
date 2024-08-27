@@ -1,84 +1,32 @@
-import twilio from 'twilio';
-import {TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_SERVICE_SID} from "../config.js"; 
-
-const clientTwilio = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
+import { verifyPhoneNumberService, checkPhoneNumberService } from "../service/verifyNumber.service.js";
+import httpResponses from "../utils/httpResponses.js";
 
 export const verifyPhoneNumber = async (req,res) =>{
     try {
-        const {number} = req.body;
-        const countryCode = '+51';
-        const responseVerify = await clientTwilio.verify.v2
-                                .services(TWILIO_SERVICE_SID)
-                                .verifications
-                                .create({
-                                        to: countryCode + number,
-                                        channel:'sms'
-                                });
-        res.json({ 
-            "status" : responseVerify.status
-        });
+        const { number } = req.body;
+        const response = await verifyPhoneNumberService(number);
+        res.status(httpResponses.OK.status).json(response);
     } catch (error) {
-        res.status(error.status).json({
-            "error" : "error when verifying the number",
-            "details" : error.moreInfo
-        })
-        console.log(error)
+        res.status(error.status || httpResponses.INTERNAL_SERVER_ERROR.status).json({
+            error: error.message,
+            details: error.details
+        });
     }
 }
 
 export const checkPhoneNumber = async (req,res) =>{
-    const {number, code} = req.body;
-    const countryCode = '+51';
-    /*
-    const regexNumber = /^[0-9]{9}$/;
-    
-    try { 
-        if(!regexNumber.test(number)){
-            res.status(400).json({
-                "status" : "number invalid"
-            })
-        }
-        
-        const regexCode = /^[0-9]{6}$/;
-        if(!regexCode.test(code)){
-            res.status(400).json({
-                "status" : "code invalid"
-            })
-        }
-           
-    } catch (error) {
-        console.log(error);
-        res.status(404).json({status:"number invalid"});
-    }
-    */
     try {
-        const responseVeryfyCode = await clientTwilio.verify.v2
-                                    .services(TWILIO_SERVICE_SID)
-                                    .verificationChecks
-                                    .create(
-                                        {
-                                            to:countryCode + number,
-                                            code
-                                        }
-                                    );
-        if(responseVeryfyCode.status==="approved"){
-            res.status(200).json({"status" : responseVeryfyCode.status});
-        }else{ 
-            res.status(401).json({status:"Invalid"});
+        const { number, code } = req.body;
+        const response = await checkPhoneNumberService(number, code);
+        if (response.status === "approved") {
+            res.status(httpResponses.OK.status).json(response);
+        } else {
+            res.status(httpResponses.UNAUTHORIZED.status).json({ status: "Invalid" });
         }
-
     } catch (error) {
-        res.status(error.status).json({
-            "error" : "error when verifying the number",
-            "details" : error.moreInfo
-        })
-        console.log(error)
-    }    
-     /*
-    if(regexNumber.test(number) && regexCode.test(code)){
-        
-    }else{
-        res.status(404).json({status:"number invalid"});
+        res.status(error.status || httpResponses.INTERNAL_SERVER_ERROR.status).json({
+            error: error.message,
+            details: error.details
+        });
     }
-    */
 }
