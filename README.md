@@ -17,4 +17,9 @@
       ```bash
       npm run dev
       ```
+
+## Cómo construir la imagen
+
+
+
 Esto ejecutará la aplicación Node.js. Abre tu navegador web y navega a la dirección en la que se ejecuta la aplicación (http://localhost:3000). 
