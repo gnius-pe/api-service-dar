@@ -151,8 +151,6 @@ export const createPatientService = async (patientData) => {
       formattedPatient.personalInformation.birthDate = birthDate;
       formattedPatient.cita.appointmentDate = appointmentDate;
 
-
-  
       for (const { label: specialtyName } of specialties) {
         const specialty = await SpecialtyModel.findOne({ specialtyName });
         if (specialty) {
