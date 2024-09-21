@@ -17,4 +17,17 @@
       ```bash
       npm run dev
       ```
+
+## Ejecutar en docker
+
+1. **Comando para construir la imagen** 
+      ```bash
+      docker build -t dar-servicio-auth-patient .
+      ```
+
+2. **Comando para ejecutar el contenedor** 
+      ```bash
+      docker run -d --name dar-servicio-auth-patient-container -p 3000:3000 dar-servicio-auth-patient
+      ```
+
 Esto ejecutará la aplicación Node.js. Abre tu navegador web y navega a la dirección en la que se ejecuta la aplicación (http://localhost:3000). 

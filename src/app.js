@@ -10,6 +10,7 @@ import specialtyRouter from "./routes/specialty.routes.js";
 import reportByDashboard from "./routes/reportByDashboard.routes.js";
 import cors from "cors";
 import { CLIENT_URL, DEV_URL, CLIENT_URL_DAR , CLIENT_CONTAINER} from './config.js';
+import basicoRouter from "../src/routes/basico.routes.js";
 
 const app = express();
 
@@ -27,5 +28,6 @@ app.use('/api',misionRouter);
 app.use('/api',userRouter);
 app.use('/api',specialtyRouter);
 app.use('/api',reportByDashboard);
+app.use('/api',basicoRouter);
 
 export default app;

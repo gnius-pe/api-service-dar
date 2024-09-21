@@ -11,19 +11,19 @@ export const deletePatientservice = async (id) => {
       }
       return { message: "Patient deleted" };
     } catch (error) {
-      console.error("Error deleting patient:", error);
+      //console.error("Error deleting patient:", error);
       throw new Error("Error deleting patient: " + error.message);
     }
 };
 
 export const checkDNIDuplicateService = async (dni) => {
-    try {
-      const estateDNI = await TestPatient.findOne({"personalInformation.numberIdentification": dni});
-      return estateDNI ? true : false;
-    } catch (error) {
-      console.error("Error checking DNI duplication:", error);
-      throw new Error("Error checking DNI duplication: " + error.message);
-    }
+  try {
+    const estateDNI = await TestPatient.findOne({"personalInformation.numberIdentification": dni});
+    return estateDNI ? true : false;
+  } catch (error) {
+    //console.error("Error checking DNI duplication:", error);
+    throw error; // Lanzamos el error original en lugar de crear uno nuevo
+  }
 };
 
 export const getPatientsService = async (page, limit) => {
@@ -66,7 +66,7 @@ export const getPatientsService = async (page, limit) => {
         },
       };
     } catch (error) {
-      console.error("Error fetching patients:", error);
+      //console.error("Error fetching patients:", error);
       throw new Error("Error fetching patients");
     }
 };
@@ -79,7 +79,7 @@ export const getPatientByIdService = async (id) => {
       }
       return patient;
     } catch (error) {
-      console.error("Error fetching patient:", error);
+      //console.error("Error fetching patient:", error);
       throw error;
     }
 };
@@ -133,13 +133,6 @@ export const createPatientService = async (patientData) => {
         spiritualSupport: spiritualSupport || false,
         futureActivities: futureActivities || false,
       };
-
-      for (const { label: specialtyName } of specialties) {
-        const specialty = await SpecialtyModel.findOne({ specialtyName });
-        if (!specialty || specialty.availableSlots <= 0) {
-          throw new Error(`No hay cupos disponibles para la especialidad: ${specialtyName}`);
-        }
-      }
   
       // Sumo el total de pacientes + 1 para asignarle un lugar entre los demás documentos
       const countPatient = await TestPatient.countDocuments();
@@ -158,22 +151,18 @@ export const createPatientService = async (patientData) => {
       formattedPatient.personalInformation.birthDate = birthDate;
       formattedPatient.cita.appointmentDate = appointmentDate;
 
-
-  
       for (const { label: specialtyName } of specialties) {
         const specialty = await SpecialtyModel.findOne({ specialtyName });
         if (specialty) {
           specialty.availableSlots = Math.max(specialty.availableSlots - 1, 0);
           await specialty.save();
-          console.log(`Updated ${specialtyName}: new availableSlots = ${specialty.availableSlots}`);
-        } else {
-          console.log(`Specialty ${specialtyName} not found`);
+          //console.log(`Updated ${specialtyName}: new availableSlots = ${specialty.availableSlots}`);
         }
       }
   
       return formattedPatient;
     } catch (error) {
-      console.error("Error al guardar:", error);
+      //console.error("Error al guardar:", error);
       throw new Error("Error al guardar: " + error.message);
     }
 };
@@ -251,7 +240,7 @@ export const updatePatientService = async (id, patientData) => {
   
       return formatPatient;
     } catch (error) {
-      console.error("Error updating patient:", error);
+      //console.error("Error updating patient:", error);
       throw new Error("Error updating patient: " + error.message);
     }
 };

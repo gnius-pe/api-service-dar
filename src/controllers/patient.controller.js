@@ -7,25 +7,32 @@ import {
   checkDNIDuplicateService,
   deletePatientservice } from "../service/patient.service.js";
 
-export const getDNIDuplicate = async (req, res) =>{
-  try {
-    const isDuplicate = await checkDNIDuplicateService(req.params.dni);
-    if(isDuplicate){
-      res.status(httpResponses.OK.status).json({
-        state : true
-      });
-    }else{
-      res.status(httpResponses.NOT_FOUND.status).json({
-        state : false
-      })
+  export const getDNIDuplicate = async (req, res) => {
+    try {
+      const isDuplicate = await checkDNIDuplicateService(req.params.dni);
+      if (isDuplicate) {
+        res.status(httpResponses.OK.status).json({
+          state: true
+        });
+      } else {
+        res.status(httpResponses.NOT_FOUND.status).json({
+          state: false
+        });
+      }
+    } catch (error) {
+      console.error("Error in getDNIDuplicate:", error);
+      
+      if (error.name === 'MongoNotConnectedError' || error.message.includes('Client must be connected before running operations')) {
+        res.status(httpResponses.INTERNAL_SERVER_ERROR.status).json({
+          message: "Database connection error: " + error.message,
+        });
+      } else {
+        res.status(httpResponses.INTERNAL_SERVER_ERROR.status).json({
+          message: "An unexpected error occurred: " + error.message,
+        });
+      }
     }
-  } catch (error) {
-    console.error("waiting error :" + error);
-    res.status(httpResponses.INTERNAL_SERVER_ERROR.status).json({
-      message: "waiting error :" + error,
-    });
   }
-}
 
 export const getPatients = async (req, res) => {
   const option = {

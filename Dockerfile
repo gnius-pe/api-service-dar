@@ -1,22 +1,22 @@
-FROM node:18-alpine as deps
+FROM node:18-alpine AS depsbackend_image
 WORKDIR /app
 
 COPY package.json package-lock.json ./
 RUN npm install --frozen-lockfile
 
-FROM node:18-alpine as builder
+FROM node:18-alpine AS buildbackend_image
 WORKDIR /app
 
-COPY --from=deps /app/node_modules ./node_modules
-
+COPY --from=depsbackend_image /app/node_modules ./node_modules
 COPY . .
 
-
-from node:18-alpine as runner
+FROM node:18-alpine AS productionbackend_image
 WORKDIR /app
 
 COPY package.json package-lock.json ./
 RUN npm install --prod
-COPY --from=builder /app ./
+COPY --from=buildbackend_image /app ./
+# Copia el archivo .env
+COPY .env .env
 
 CMD ["node", "index"]
