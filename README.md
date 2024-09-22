@@ -31,3 +31,10 @@
       ```
 
 Esto ejecutará la aplicación Node.js. Abre tu navegador web y navega a la dirección en la que se ejecuta la aplicación (http://localhost:3000). 
+
+
+---
+
+© 2024 [CODE GNIUS](https://github.com/gnius-pe). Todos los derechos reservados.
+
+Este proyecto está alojado en el repositorio [dar-service-auth-patient](https://github.com/gnius-pe/api-service-dar). El uso del código y los recursos de este proyecto están sujetos a los términos de la licencia [Licencia MIT](./LICENSE).
